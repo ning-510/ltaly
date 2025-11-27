@@ -163,170 +163,171 @@
 
     <script>
         // --- DATA ---
-        // 加入 lat, lng 座標以供天氣 API 使用
+        // 更新：移除 story, 加入精確航班, 詳細三餐(含自理推薦)
         const itineraryData = [
             {
                 day: 1, date: '12/05 (五)', location: '台北 → 杜拜',
-                lat: 25.2532, lng: 55.3657, // Dubai Airport
-                weather: null, // Will be fetched
-                main: '集合：桃園機場第二航廈',
+                lat: 25.0797, lng: 121.2342, // Taoyuan Airport (Starting point weather)
+                locationName: '📍 桃園 Taoyuan',
+                weather: null,
                 details: [
-                    { type: 'traffic', title: '長程航班', content: 'EK367 (23:00) 台北 → 杜拜 (04:55+1)', color: 'bg-indigo-100' },
-                    { type: 'meal', title: '餐食', content: '早餐/午餐：溫暖的家；晚餐：機上餐食', color: 'bg-green-100' }
-                ],
-                story: '【企劃小語】帶著期待的心情出發！特別安排阿聯酋航空雙點進出，省下約七小時車程。'
+                    { type: 'info', title: '集合資訊', content: '20:00 桃園機場第二航廈 阿聯酋航空團體櫃台', color: 'bg-red-100' },
+                    { type: 'flight', title: '阿聯酋航空 EK367', content: '23:00 台北 TPE ✈️ 04:55+1 杜拜 DXB (飛行 09h55m)', color: 'bg-blue-100' },
+                    { type: 'meal', title: '早餐', content: '溫暖的家', color: 'bg-green-50' },
+                    { type: 'meal', title: '午餐', content: '溫暖的家', color: 'bg-green-50' },
+                    { type: 'meal', title: '晚餐', content: '機上餐食', color: 'bg-green-100' }
+                ]
             },
             {
                 day: 2, date: '12/06 (六)', location: '杜拜 → 米蘭 (Milan)',
                 lat: 45.4642, lng: 9.1900, // Milan
+                locationName: '📍 米蘭 Milan',
                 weather: null,
-                main: '米蘭市區觀光',
                 details: [
-                    { type: 'sight', title: '米蘭大教堂 (Duomo)', content: '全世界最大的哥德式教堂，白色大理石外觀雄偉典雅。', color: 'bg-red-100' },
-                    { type: 'sight', title: '艾曼紐二世迴廊', content: '米蘭的大客廳，匯集各式高貴商家，時尚血拚重鎮。', color: 'bg-red-100' },
+                    { type: 'flight', title: '阿聯酋航空 EK205', content: '09:05 杜拜 DXB ✈️ 13:10 米蘭 MXP (飛行 07h05m)', color: 'bg-blue-100' },
+                    { type: 'sight', title: '米蘭市區觀光', content: '米蘭大教堂 (外觀)、艾曼紐二世迴廊', color: 'bg-red-100' },
+                    { type: 'meal', title: '早餐', content: '機上餐食', color: 'bg-green-50' },
+                    { type: 'meal', title: '午餐 (自理推薦)', content: '📍Luini (炸三明治 €3-5) 或 📍Spontini (厚比薩 €5-8) - 都在教堂旁，平價美味', color: 'bg-yellow-100' },
                     { type: 'meal', title: '晚餐', content: '米蘭燉飯風味料理', color: 'bg-green-100' },
                 ],
                 hotel: { name: 'UNAHOTELS MALPENSA', mapQuery: 'UNAHOTELS+Malpensa', note: '位於米蘭馬爾彭薩機場附近，現代化舒適飯店。' },
                 highlights: [
-                    { type: 'eat', name: 'Luini Panzerotti (炸三明治)', link: 'Luini+Milano', desc: '米蘭必吃百年老店，就在大教堂旁。' },
-                    { type: 'eat', name: 'Cioccolatitaliani (冰淇淋)', link: 'Cioccolatitaliani+Milano', desc: '排隊名店，巧克力口味濃郁。' },
-                    { type: 'buy', name: 'KIKO 彩妝', link: 'KIKO+Milano', desc: '義大利平價彩妝王者，送禮自用兩相宜。' }
-                ],
-                story: '【景點故事】米蘭大教堂以其精美的哥德式尖塔和聖母瑪利亞鍍金雕像聞名。登頂可以俯瞰米蘭市景。'
+                    { type: 'eat', name: 'Luini Panzerotti', link: 'Luini+Milano', desc: '米蘭必吃百年炸三明治老店。' },
+                    { type: 'buy', name: 'KIKO 彩妝', link: 'KIKO+Milano', desc: '義大利平價彩妝王者。' }
+                ]
             },
             {
                 day: 3, date: '12/07 (日)', location: '馬焦雷湖 → 維洛納 (Verona)',
                 lat: 45.4384, lng: 10.9916, // Verona
+                locationName: '📍 維洛納 Verona',
                 weather: null,
-                main: '北義湖區遊船體驗與維洛納古城',
                 details: [
-                    { type: 'traffic', title: '馬焦雷湖 遊船', content: '義大利第二大湖，親訪不亞於瑞士的湖光山色。', color: 'bg-indigo-100' },
-                    { type: 'sight', title: '圓形競技場 (Arena di Verona)', content: '世界第三大競技場，現今仍用於夏季歌劇音樂節。', color: 'bg-red-100' },
+                    { type: 'traffic', title: '馬焦雷湖 遊船', content: '北義湖區遊船體驗，欣賞湖光山色。', color: 'bg-indigo-100' },
+                    { type: 'sight', title: '維洛納古城', content: '圓形競技場 (外觀)、茱麗葉故居 (外觀)', color: 'bg-red-100' },
+                    { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
+                    { type: 'meal', title: '午餐', content: '西式風味料理', color: 'bg-green-100' },
                     { type: 'meal', title: '晚餐', content: '百年教堂義式披薩風味料理', color: 'bg-green-100' }
                 ],
                 hotel: { name: 'BEST WESTERN CTC HOTEL VERONA', mapQuery: 'Best+Western+CTC+Hotel+Verona', note: '位於維洛納郊區，交通便利。' },
                 highlights: [
-                    { type: 'visit', name: '茱麗葉之家', link: 'Casa+di+Giulietta', desc: '觸摸茱麗葉銅像右胸祈求愛情順利。' },
-                    { type: 'buy', name: '檸檬糖/檸檬酒', link: 'Supermarket+near+Verona', desc: '維洛納周邊超市可購入伴手禮。' }
-                ],
-                story: '【景點故事】維洛納是羅密歐與茱麗葉的故鄉，圓形競技場保存完好，是羅馬時期遺產。'
+                    { type: 'visit', name: '茱麗葉之家', link: 'Casa+di+Giulietta', desc: '愛情聖地，摸銅像祈福。' }
+                ]
             },
             {
-                day: 4, date: '12/08 (一)', location: '威尼斯 (Venice) 單飛時光',
+                day: 4, date: '12/08 (一)', location: '威尼斯 (Venice)',
                 lat: 45.4408, lng: 12.3155, // Venice
+                locationName: '📍 威尼斯 Venice',
                 weather: null,
-                main: '水都巷弄散策與貢多拉體驗',
                 details: [
-                    { type: 'sight', title: '威尼斯巷弄散策', content: '當地導遊帶領，步行前往聖馬可島。', color: 'bg-red-100' },
-                    { type: 'sight', title: '貢多拉體驗', content: '特別安排搭乘貢多拉 (五人一艘)，享受水巷行舟樂趣。', color: 'bg-red-100' },
+                    { type: 'sight', title: '威尼斯本島', content: '巷弄散策、貢多拉體驗 (5人一艘)', color: 'bg-red-100' },
+                    { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐', content: '威尼斯墨魚麵佐炸海鮮+提拉米蘇', color: 'bg-green-100' },
-                    { type: 'meal', title: '晚餐', content: '單飛時光，敬請自理 (推薦海鮮小點)', color: 'bg-yellow-100' }
+                    { type: 'meal', title: '晚餐 (自理推薦)', content: '📍Dal Moro\'s (外帶義大利麵 €7-10) 或 📍Fried Land (炸海鮮 €8-12) - 聖馬可區高CP值', color: 'bg-yellow-100' }
                 ],
                 hotel: { name: 'CROWNE PLAZA PADOVA', mapQuery: 'Crowne+Plaza+Padova', note: '位於帕多瓦(Padova)，距離威尼斯約40分鐘車程。' },
                 highlights: [
-                    { type: 'eat', name: 'Florian 花神咖啡館', link: 'Caffè+Florian', desc: '聖馬可廣場上，世界最美咖啡館之一。' },
-                    { type: 'eat', name: '炸海鮮 (Frito Misto)', link: 'Frito+Misto+Venice', desc: '隨手杯裝的炸海鮮，威尼斯街頭美食。' },
-                    { type: 'buy', name: '威尼斯面具/玻璃飾品', link: 'Venetian+Mask+Shop', desc: '精緻的手工面具與穆拉諾玻璃。' }
-                ],
-                story: '【景點故事】貢多拉是威尼斯標誌性的平底船，傳統上由單一船夫划動，常會唱歌娛樂遊客。'
+                    { type: 'eat', name: 'Dal Moro\'s Pasta', link: 'Dal+Moro\'s+Fresh+Pasta+to+Go', desc: '超人氣外帶義大利麵盒。' },
+                    { type: 'buy', name: '威尼斯面具', link: 'Venetian+Mask+Shop', desc: '精緻的手工紀念品。' }
+                ]
             },
             {
                 day: 5, date: '12/09 (二)', location: '佛羅倫斯 (Florence)',
                 lat: 43.7696, lng: 11.2558, // Florence
+                locationName: '📍 佛羅倫斯 Florence',
                 weather: null,
-                main: '文藝復興浪漫之旅',
                 details: [
-                    { type: 'sight', title: '聖母百花大教堂', content: '文藝復興建築傑作，巨大圓頂為佛羅倫斯驕傲。', color: 'bg-red-100' },
-                    { type: 'sight', title: '領主廣場', content: '露天的美術館，海神噴泉與各式雕像群。', color: 'bg-red-100' },
-                    { type: 'meal', title: '午餐', content: '佛羅倫斯牛排風味料理佐酒水', color: 'bg-green-100' }
+                    { type: 'sight', title: '文藝復興之旅', content: '聖母百花大教堂、領主廣場、老橋', color: 'bg-red-100' },
+                    { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
+                    { type: 'meal', title: '午餐', content: '佛羅倫斯牛排風味料理佐酒水', color: 'bg-green-100' },
+                    { type: 'meal', title: '晚餐', content: '中式料理六菜一湯', color: 'bg-green-100' }
                 ],
                 hotel: { name: 'GRAND HOTEL CROCE DI MALTA', mapQuery: 'Grand+Hotel+Croce+di+Malta', note: '位於溫泉小鎮蒙泰卡蒂尼 (Montecatini Terme)。' },
                 highlights: [
-                    { type: 'eat', name: '牛肚包 (Lampredotto)', link: 'Da+Nerbone', desc: '中央市場內的人氣平民美食。' },
-                    { type: 'buy', name: 'SMN 百年修道院藥妝', link: 'Officina+Profumo-Farmaceutica+di+Santa+Maria+Novella', desc: '必買玫瑰水、金盞花霜。' },
-                    { type: 'buy', name: '蕾莉歐 (L\'Erbolario)', link: 'L\'Erbolario+Firenze', desc: '百花大教堂旁，台灣價差極大。' }
-                ],
-                story: '【景點故事】聖母百花大教堂的巨大圓頂由布魯內列斯基設計，是文藝復興的建築傑作，登頂需預約。'
+                    { type: 'eat', name: '中央市場牛肚包', link: 'Da+Nerbone', desc: 'Da Nerbone 排隊美食。' },
+                    { type: 'buy', name: '蕾莉歐 L\'Erbolario', link: 'L\'Erbolario+Firenze', desc: '百花大教堂旁，價差大必買。' }
+                ]
             },
             {
                 day: 6, date: '12/10 (三)', location: '五漁村 → 比薩 (Pisa)',
-                lat: 43.7228, lng: 10.4016, // Pisa (using Pisa for weather as it's the endpoint)
+                lat: 44.1270, lng: 9.7094, // Cinque Terre (Monterosso)
+                locationName: '📍 五漁村 Cinque Terre',
                 weather: null,
-                main: '繽紛五漁村與舉世斜塔',
                 details: [
-                    { type: 'traffic', title: '火車遊五漁村', content: '搭乘火車進入其中二個漁村，欣賞繽紛房舍與葡萄園。', color: 'bg-indigo-100' },
-                    { type: 'sight', title: '比薩斜塔/奇蹟廣場', content: '世界遺產，參觀比薩大教堂與斜塔。', color: 'bg-red-100' },
-                    { type: 'meal', title: '午餐', content: '敬請自理 (可嘗試五漁村小吃)', color: 'bg-yellow-100' }
+                    { type: 'traffic', title: '五漁村火車', content: '搭乘火車遊覽其中兩個漁村', color: 'bg-indigo-100' },
+                    { type: 'sight', title: '比薩斜塔', content: '奇蹟廣場、比薩大教堂', color: 'bg-red-100' },
+                    { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
+                    { type: 'meal', title: '午餐 (自理推薦)', content: '📍Il Pescato Cucinato (炸海鮮筒 €8-12) - Riomaggiore 村著名街頭小吃', color: 'bg-yellow-100' },
+                    { type: 'meal', title: '晚餐', content: '中式料理六菜一湯', color: 'bg-green-100' }
                 ],
                 hotel: { name: 'AC HOTEL PISA', mapQuery: 'AC+Hotel+Pisa', note: '位於比薩近郊，現代設計風格。' },
                 highlights: [
-                    { type: 'eat', name: '五漁村炸海鮮桶', link: 'Cinque+Terre+Fried+Seafood', desc: '新鮮現炸，搭配檸檬汁絕配。' },
-                    { type: 'visit', name: '比薩斜塔推塔照', link: 'Leaning+Tower+of+Pisa', desc: '發揮創意拍出最有趣的錯位照！' }
-                ],
-                story: '【景點故事】五漁村由五個彩色漁村組成，被列為世界遺產，需搭火車或船遊覽，是義大利最知名的海岸景觀之一。'
+                    { type: 'eat', name: '炸海鮮筒', link: 'Il+Pescato+Cucinato+Riomaggiore', desc: '新鮮現炸海鮮，五漁村必吃。' },
+                    { type: 'visit', name: '比薩斜塔推塔照', link: 'Leaning+Tower+of+Pisa', desc: '發揮創意拍錯位照。' }
+                ]
             },
             {
-                day: 7, date: '12/11 (四)', location: '托斯卡尼慢活之旅 → 羅馬',
-                lat: 41.9028, lng: 12.4964, // Rome
+                day: 7, date: '12/11 (四)', location: '托斯卡尼 → 羅馬',
+                lat: 43.0773, lng: 11.6123, // Pienza
+                locationName: '📍 皮恩薩 Pienza',
                 weather: null,
-                main: '品酒體驗與山城巡禮',
                 details: [
-                    { type: 'sight', title: '托斯卡尼 酒莊品酒', content: '蒙特普齊亞諾周圍地區，品嚐當地葡萄酒。', color: 'bg-red-100' },
-                    { type: 'sight', title: '皮恩薩山城 (Pienza)', content: '被譽為「奧爾恰山谷的珍珠」，遠眺丘陵美景。', color: 'bg-red-100' },
-                    { type: 'traffic', title: '長程巴士', content: '皮恩薩 → 羅馬 (約 188KM)', color: 'bg-indigo-100' }
+                    { type: 'sight', title: '托斯卡尼酒莊', content: '品酒體驗', color: 'bg-red-100' },
+                    { type: 'sight', title: '皮恩薩山城', content: '漫步世界遺產山城', color: 'bg-red-100' },
+                    { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
+                    { type: 'meal', title: '午餐', content: '西式風味料理', color: 'bg-green-100' },
+                    { type: 'meal', title: '晚餐', content: '中式料理六菜一湯', color: 'bg-green-100' }
                 ],
                 hotel: { name: 'WARMTHOTEL', mapQuery: 'Warmthotel+Rome', note: '位於羅馬 EUR 區，設計新穎。' },
                 highlights: [
-                    { type: 'eat', name: '皮恩薩佩科里諾起司', link: 'Pecorino+Cheese+Pienza', desc: '當地的羊奶起司非常有名。' },
                     { type: 'buy', name: '托斯卡尼紅酒', link: 'Tuscany+Winery', desc: 'Chianti 或 Brunello 都是頂級選擇。' }
-                ],
-                story: '【景點故事】皮恩薩山城是教宗庇護二世將家鄉打造成文藝復興理想城的典範，被譽為奧爾恰山谷的珍珠。'
+                ]
             },
             {
                 day: 8, date: '12/12 (五)', location: '羅馬 (Rome)',
                 lat: 41.9028, lng: 12.4964, // Rome
+                locationName: '📍 羅馬 Rome',
                 weather: null,
-                main: '永恆之城一日市區觀光',
                 details: [
-                    { type: 'sight', title: '羅馬競技場 (Colosseum)', content: '古羅馬帝國的象徵，專業中文導遊全日導覽。', color: 'bg-red-100' },
-                    { type: 'sight', title: '許願池/西班牙廣場', content: '重溫《羅馬假期》的浪漫場景，並贈送金杯咖啡。', color: 'bg-red-100' },
-                    { type: 'sight', title: '聖彼得大教堂 (Vatican)', content: '全世界最大、最壯麗的教堂 (請勿穿著無袖/短裙)。', color: 'bg-red-100' },
+                    { type: 'sight', title: '羅馬市區觀光', content: '競技場(外觀)、許願池、西班牙廣場、聖彼得大教堂(入內)', color: 'bg-red-100' },
+                    { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
+                    { type: 'meal', title: '午餐', content: '中式料理六菜一湯', color: 'bg-green-100' },
                     { type: 'meal', title: '晚餐', content: '羅馬小羔羊風味料理', color: 'bg-green-100' }
                 ],
                 hotel: { name: 'WARMTHOTEL', mapQuery: 'Warmthotel+Rome', note: '續住第二晚。' },
                 highlights: [
-                    { type: 'eat', name: '金杯咖啡 (Tazza d\'Oro)', link: 'Tazza+d\'Oro+Rome', desc: '羅馬最知名的咖啡，必喝 Espresso。' },
-                    { type: 'eat', name: 'Old Bridge Gelato', link: 'Old+Bridge+Gelateria', desc: '梵蒂岡附近的超人氣冰淇淋老店。' },
-                    { type: 'buy', name: '金杯咖啡豆/巧克力球', link: 'Tazza+d\'Oro+Rome', desc: '最佳伴手禮，巧克力球內含咖啡豆。' }
-                ],
-                story: '【景點故事】羅馬競技場是古羅馬最大的圓形鬥獸場，可容納五萬人，現存的遺跡是了解羅馬歷史的重要地點。'
+                    { type: 'eat', name: '金杯咖啡', link: 'Tazza+d\'Oro+Rome', desc: '羅馬必喝 Espresso，必買咖啡豆。' },
+                    { type: 'eat', name: 'Old Bridge Gelato', link: 'Old+Bridge+Gelateria', desc: '梵蒂岡旁高人氣冰淇淋。' }
+                ]
             },
             {
                 day: 9, date: '12/13 (六)', location: '羅馬 → 杜拜',
-                lat: 41.9028, lng: 12.4964, // Rome
+                lat: 41.7137, lng: 12.4439, // Castel Romano Outlet
+                locationName: '📍 羅馬 Outlet',
                 weather: null,
-                main: 'Outlet 購物天堂',
                 details: [
-                    { type: 'sight', title: 'Castel Romano Outlet', content: 'Designer Outlet滿足最後購物慾，約150家名牌商店。', color: 'bg-red-100' },
-                    { type: 'traffic', title: '羅馬達文西機場', content: 'EK098 (14:55) 羅馬 → 杜拜 (23:30)', color: 'bg-indigo-100' },
-                    { type: 'meal', title: '午餐/晚餐', content: '午餐自理，晚餐：機上餐食', color: 'bg-yellow-100' }
+                    { type: 'sight', title: 'Castel Romano Outlet', content: '名牌折扣村購物', color: 'bg-red-100' },
+                    { type: 'flight', title: '阿聯酋航空 EK098', content: '14:55 羅馬 FCO ✈️ 23:30 杜拜 DXB (飛行 05h35m)', color: 'bg-blue-100' },
+                    { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
+                    { type: 'meal', title: '午餐 (自理推薦)', content: '📍Farinella (Outlet內) 或 機場內輕食 - 把握時間購物', color: 'bg-yellow-100' },
+                    { type: 'meal', title: '晚餐', content: '機上餐食', color: 'bg-green-100' }
                 ],
                 highlights: [
-                    { type: 'buy', name: '精品名牌包', link: 'Castel+Romano+Designer+Outlet', desc: 'Gucci, Burberry 等品牌折扣大。' },
-                    { type: 'buy', name: 'Bialetti 摩卡壺', link: 'Bialetti+Store', desc: '義大利國民咖啡壺，造型可愛。' }
-                ],
-                story: '【購物攻略】回程是午後班機，特別安排 Outlet 在行程最後，讓您輕鬆購物，不必提早負擔戰利品。'
+                    { type: 'buy', name: '名牌精品', link: 'Castel+Romano+Designer+Outlet', desc: '把握最後購物機會。' },
+                    { type: 'buy', name: 'Bialetti 摩卡壺', link: 'Bialetti+Store', desc: 'Outlet 買通常有折扣。' }
+                ]
             },
             {
                 day: 10, date: '12/14 (日)', location: '杜拜 → 台北',
                 lat: 25.2532, lng: 55.3657, // Dubai
+                locationName: '📍 杜拜 Dubai',
                 weather: null,
-                main: '結束美好的旅程',
                 details: [
-                    { type: 'traffic', title: '長程航班', content: 'EK366 (03:40) 杜拜 → 台北 (15:35)', color: 'bg-indigo-100' },
-                    { type: 'meal', title: '餐食', content: '早餐：機上餐食', color: 'bg-green-100' }
+                    { type: 'flight', title: '阿聯酋航空 EK366', content: '03:40 杜拜 DXB ✈️ 15:35 台北 TPE (飛行 07h55m)', color: 'bg-blue-100' },
+                    { type: 'meal', title: '早餐', content: '機上餐食', color: 'bg-green-50' },
+                    { type: 'meal', title: '午餐', content: 'X', color: 'bg-gray-100' },
+                    { type: 'meal', title: '晚餐', content: 'X', color: 'bg-gray-100' }
                 ],
-                story: '義大利之旅圓滿結束，期待下次再會！'
+                story: '旅程圓滿結束，帶著滿滿的回憶回家。' 
             }
         ];
 
@@ -379,7 +380,6 @@
                     </div>
                 `;
                 
-                // 檢查是否需要抓取天氣
                 checkAndFetchWeather(currentDayIndex);
 
             } else if (currentTab === 'notes') {
@@ -437,7 +437,9 @@
                     let icon, colorClass, label;
                     if (h.type === 'eat') { icon = 'utensils-crossed'; colorClass = 'text-orange-600 bg-orange-50 border-orange-200'; label = '必吃'; }
                     else if (h.type === 'buy') { icon = 'shopping-bag'; colorClass = 'text-pink-600 bg-pink-50 border-pink-200'; label = '必買'; }
+                    else if (h.type === 'visit') { icon = 'map-pin'; colorClass = 'text-green-600 bg-green-50 border-green-200'; label = '必訪'; }
                     else { icon = 'camera'; colorClass = 'text-indigo-600 bg-indigo-50 border-indigo-200'; label = '必去'; }
+                    
                     const googleMapLink = `https://www.google.com/maps/search/?api=1&query=${h.link}`;
                     return `
                         <a href="${googleMapLink}" target="_blank" class="block mb-2 group">
@@ -467,26 +469,26 @@
                 `;
             }
 
-            // 產生天氣 HTML
             let weatherHtml = '';
             if (item.weather) {
                 weatherHtml = `
                     <div class="bg-[#e0f2f1] text-teal-800 p-3 rounded-xl mb-4 flex justify-between items-center shadow-inner border border-teal-300 relative z-10">
                         <div class="font-bold text-lg">${item.weather.icon} ${item.weather.temp}</div>
                         <div class="text-right text-sm">
-                            <p class="font-semibold">當地即時天氣</p>
-                            <p>${item.weather.condition}</p>
+                            <p class="font-semibold text-xs text-teal-600 uppercase">${item.locationName}</p>
+                            <p class="font-bold">${item.weather.condition}</p>
                         </div>
                     </div>
                 `;
             } else {
                 weatherHtml = `
                     <div class="bg-gray-100 text-gray-500 p-3 rounded-xl mb-4 flex justify-center items-center shadow-inner border border-gray-200 relative z-10">
-                        <span class="spinner mr-2"></span> 正在載入當地氣溫...
+                        <span class="spinner mr-2"></span> 正在載入 ${item.locationName} 氣溫...
                     </div>
                 `;
             }
 
+            // 移除 story 區塊
             return `
                 <div class="scrapbook-card bg-white p-5 rounded-3xl border-2 border-[#5a5a5a] relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -mr-8 -mt-8 z-0 opacity-50"></div>
@@ -501,12 +503,6 @@
                     <div class="space-y-3 mb-4 relative z-10">${detailCards}</div>
                     ${highlightsSection}
                     ${hotelSection}
-                    <div class="bg-yellow-50 p-4 rounded-xl shadow-inner border border-yellow-300 relative z-10">
-                        <p class="text-sm font-bold text-gray-700 mb-2 flex items-center">
-                            <i data-lucide="book-open-text" class="w-4 h-4 mr-1"></i> 旅行筆記
-                        </p>
-                        <p class="text-sm text-gray-600 leading-relaxed italic">${item.story}</p>
-                    </div>
                 </div>
             `;
         }
@@ -547,7 +543,6 @@
                 </div>
             `;
             
-            // New UI for Google Sheet Binding
             const sheetBindingSection = `
                 <div class="bg-white p-4 rounded-xl scrapbook-card mb-6">
                     <h3 class="font-bold text-gray-700 mb-2 flex items-center">
@@ -576,7 +571,6 @@
                         <i data-lucide="wallet" class="w-5 h-5 mr-2 text-red-600"></i> 旅遊記帳
                     </h2>
                     
-                    <!-- Currency Tip -->
                     <div class="bg-blue-50 p-4 rounded-xl scrapbook-card mb-6 border border-blue-300">
                         <h3 class="font-bold text-gray-700 mb-2 flex items-center text-blue-800">
                             <i data-lucide="banknote" class="w-4 h-4 mr-2 text-blue-600"></i> 💳 匯率小幫手
@@ -588,10 +582,8 @@
                         </p>
                     </div>
 
-                    <!-- Google Sheet Binding -->
                     ${sheetBindingSection}
 
-                    <!-- Expenses Form -->
                     <div class="bg-white p-4 rounded-xl scrapbook-card mb-6">
                         <h3 class="font-bold text-gray-700 mb-4">新增支出</h3>
                         
@@ -668,8 +660,10 @@
         function getIconName(type) {
             switch (type) {
                 case 'sight': return 'aperture';
+                case 'flight': return 'plane';
                 case 'traffic': return 'bus';
                 case 'meal': return 'utensils';
+                case 'info': return 'info'; // 新增 info icon
                 default: return 'map-pin';
             }
         }
@@ -678,7 +672,6 @@
         
         function checkAndFetchWeather(index) {
             const item = itineraryData[index];
-            // 如果還沒有天氣資料，或資料已經超過 1 小時 (避免頻繁請求)，就抓取新的
             const now = new Date().getTime();
             if (!item.weather || (item.weatherTimestamp && now - item.weatherTimestamp > 3600000)) {
                 fetchWeather(index, item.lat, item.lng);
@@ -687,7 +680,6 @@
 
         async function fetchWeather(index, lat, lng) {
             try {
-                // 使用 Open-Meteo 免費 API
                 const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&timezone=auto`);
                 const data = await response.json();
                 
@@ -696,7 +688,6 @@
                     const code = data.current.weather_code;
                     const weatherInfo = getWeatherDescription(code);
                     
-                    // 更新數據
                     itineraryData[index].weather = {
                         temp: `${temp}°C`,
                         icon: weatherInfo.icon,
@@ -704,7 +695,6 @@
                     };
                     itineraryData[index].weatherTimestamp = new Date().getTime();
                     
-                    // 只有當使用者還停留在這一頁時才重新渲染，避免跳動
                     if (currentDayIndex === index) {
                         renderApp();
                     }
@@ -720,27 +710,17 @@
             }
         }
 
-        // WMO Weather Codes 轉換表
         function getWeatherDescription(code) {
-            // 0: Clear sky
             if (code === 0) return { icon: '☀️', desc: '晴朗' };
-            // 1, 2, 3: Mainly clear, partly cloudy, and overcast
             if (code === 1) return { icon: '🌤️', desc: '大致晴朗' };
             if (code === 2) return { icon: '⛅', desc: '多雲' };
             if (code === 3) return { icon: '☁️', desc: '陰天' };
-            // 45, 48: Fog
             if (code === 45 || code === 48) return { icon: '🌫️', desc: '有霧' };
-            // 51, 53, 55: Drizzle
             if (code >= 51 && code <= 55) return { icon: '🌧️', desc: '毛毛雨' };
-            // 61, 63, 65: Rain
             if (code >= 61 && code <= 67) return { icon: '🌧️', desc: '下雨' };
-            // 71-77: Snow
             if (code >= 71 && code <= 77) return { icon: '❄️', desc: '下雪' };
-            // 80-82: Rain showers
             if (code >= 80 && code <= 82) return { icon: '🌦️', desc: '陣雨' };
-            // 95-99: Thunderstorm
             if (code >= 95 && code <= 99) return { icon: '⛈️', desc: '雷雨' };
-            
             return { icon: '🌡️', desc: '未知天氣' };
         }
 
@@ -765,17 +745,15 @@
                     synced: false
                 };
 
-                // Add to local storage immediately
                 expenses.push(newExpense);
                 localStorage.setItem('italy_expenses', JSON.stringify(expenses));
                 
-                // If Web App URL is present, try to sync
                 if (googleWebAppUrl) {
                     btn.disabled = true;
                     btn.innerHTML = '<span class="spinner mr-2"></span> 同步中...';
                     
                     const payload = {
-                        date: newExpense.date.split('T')[0], // YYYY-MM-DD
+                        date: newExpense.date.split('T')[0],
                         item: newExpense.item,
                         currency: newExpense.currency,
                         amount: newExpense.amount
@@ -783,14 +761,11 @@
 
                     fetch(googleWebAppUrl, {
                         method: 'POST',
-                        mode: 'no-cors', // Important for simple Apps Script usage
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     })
                     .then(() => {
-                        // Mark as synced (locally)
                         expenses[expenses.length - 1].synced = true;
                         localStorage.setItem('italy_expenses', JSON.stringify(expenses));
                         statusMsg.innerText = '✅ 已儲存並同步至 Google 表格';
@@ -804,10 +779,10 @@
                     .finally(() => {
                         btn.disabled = false;
                         btn.innerText = '新增支出';
-                        renderApp(); // Re-render to show updated list
+                        renderApp();
                     });
                 } else {
-                    renderApp(); // Just render local change
+                    renderApp();
                 }
             }
         }
