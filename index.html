@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>義大利蜜月手帳 🇮🇹 10日</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Lucide Icons -->
+    <script type="module" src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 手寫風背景和字體設定 */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f3e8;
+            background-image: url("data:image/svg+xml,%3Csvg width='42' height='44' viewBox='0 0 42 44' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Page-1' fill='none' fill-rule='evenodd'%3E%3Cg id='brick-wall' fill='%23e0d8c0' fill-opacity='0.4'%3E%3Cpath d='M0 0h42v44H0z'/%3E%3Cpath d='M0 4h20v24H0zM22 10h20v24H22z' opacity='.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            padding-bottom: 80px; /* 為底部導航留空間 */
+        }
+        .tag {
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        .scrapbook-card {
+            border: 2px solid #5a5a5a;
+            box-shadow: 6px 6px 0px rgba(90, 90, 90, 0.2);
+            transition: transform 0.2s;
+        }
+        .map-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px solid #ddd;
+        }
+        .map-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        /* 底部導航欄樣式 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 50;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #6b7280;
+            width: 100%;
+        }
+        .nav-item.active {
+            color: #dc2626; /* Red-600 */
+        }
+        .day-selector {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            scrollbar-width: none; /* Firefox */
+        }
+        .day-selector::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+        .day-chip {
+            white-space: nowrap;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            background: #e5e7eb;
+            color: #4b5563;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .day-chip.active {
+            background: #dc2626;
+            color: white;
+            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+        }
+        
+        /* 動畫效果 */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div id="app" class="max-w-xl mx-auto p-4">
+        <!-- 頂部標題 (精簡版) -->
+        <header class="flex justify-between items-center mb-4 pt-2">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800 tracking-wider">
+                    🇮🇹 義大利蜜月
+                </h1>
+                <p class="text-xs text-gray-500">2025/12/05 - 12/14</p>
+            </div>
+            <div class="text-right">
+                <span id="header-day-display" class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded-lg">Day 1</span>
+            </div>
+        </header>
+
+        <!-- 主要內容區 -->
+        <main id="main-content" class="pb-4">
+            <!-- 內容將由 JavaScript 動態插入 -->
+        </main>
+    </div>
+
+    <!-- 底部導航欄 -->
+    <nav class="bottom-nav">
+        <button onclick="switchTab('itinerary')" class="nav-item active" id="nav-itinerary">
+            <i data-lucide="map-pinned" class="w-6 h-6 mb-1"></i>
+            <span>行程</span>
+        </button>
+        <button onclick="switchTab('expenses')" class="nav-item" id="nav-expenses">
+            <i data-lucide="wallet" class="w-6 h-6 mb-1"></i>
+            <span>記帳</span>
+        </button>
+        <button onclick="switchTab('notes')" class="nav-item" id="nav-notes">
+            <i data-lucide="notebook-text" class="w-6 h-6 mb-1"></i>
+            <span>須知</span>
+        </button>
+    </nav>
+
+    <script>
+        // --- DATA ---
+        const itineraryData = [
+            {
+                day: 1, date: '12/05 (五)', location: '台北 → 杜拜',
+                weather: { temp: '20°C / 25°C', icon: '☀️', condition: '桃園/杜拜 - 轉機' },
+                main: '集合：桃園機場第二航廈',
+                details: [
+                    { type: 'traffic', title: '長程航班', content: 'EK367 (23:00) 台北 → 杜拜 (04:55+1)', color: 'bg-indigo-100' },
+                    { type: 'meal', title: '餐食', content: '早餐/午餐：溫暖的家；晚餐：機上餐食', color: 'bg-green-100' }
+                ],
+                story: '【企劃小語】帶著期待的心情出發！特別安排阿聯酋航空雙點進出，省下約七小時車程。'
+            },
+            {
+                day: 2, date: '12/06 (六)', location: '杜拜 → 米蘭 (Milan)',
+                weather: { temp: '0°C / 8°C', icon: '🌥️', condition: '米蘭 - 涼爽，需防寒' },
+                main: '米蘭市區觀光',
+                details: [
+                    { type: 'sight', title: '米蘭大教堂 (Duomo)', content: '全世界最大的哥德式教堂，白色大理石外觀雄偉典雅。', color: 'bg-red-100' },
+                    { type: 'sight', title: '艾曼紐二世迴廊', content: '米蘭的大客廳，匯集各式高貴商家，時尚血拚重鎮。', color: 'bg-red-100' },
+                    { type: 'meal', title: '晚餐', content: '米蘭燉飯風味料理', color: 'bg-green-100' },
+                ],
+                hotel: { name: 'UNAHOTELS MALPENSA', mapQuery: 'UNAHOTELS+Malpensa', note: '位於米蘭馬爾彭薩機場附近，現代化舒適飯店。' },
+                highlights: [
+                    { type: 'eat', name: 'Luini Panzerotti (炸三明治)', link: 'Luini+Milano', desc: '米蘭必吃百年老店，就在大教堂旁。' },
+                    { type: 'eat', name: 'Cioccolatitaliani (冰淇淋)', link: 'Cioccolatitaliani+Milano', desc: '排隊名店，巧克力口味濃郁。' },
+                    { type: 'buy', name: 'KIKO 彩妝', link: 'KIKO+Milano', desc: '義大利平價彩妝王者，送禮自用兩相宜。' }
+                ],
+                story: '【景點故事】米蘭大教堂以其精美的哥德式尖塔和聖母瑪利亞鍍金雕像聞名。登頂可以俯瞰米蘭市景。'
+            },
+            {
+                day: 3, date: '12/07 (日)', location: '馬焦雷湖 → 維洛納 (Verona)',
+                weather: { temp: '-1°C / 7°C', icon: '🌫️', condition: '維洛納 - 清晨可能結霜，多霧' },
+                main: '北義湖區遊船體驗與維洛納古城',
+                details: [
+                    { type: 'traffic', title: '馬焦雷湖 遊船', content: '義大利第二大湖，親訪不亞於瑞士的湖光山色。', color: 'bg-indigo-100' },
+                    { type: 'sight', title: '圓形競技場 (Arena di Verona)', content: '世界第三大競技場，現今仍用於夏季歌劇音樂節。', color: 'bg-red-100' },
+                    { type: 'meal', title: '晚餐', content: '百年教堂義式披薩風味料理', color: 'bg-green-100' }
+                ],
+                hotel: { name: 'BEST WESTERN CTC HOTEL VERONA', mapQuery: 'Best+Western+CTC+Hotel+Verona', note: '位於維洛納郊區，交通便利。' },
+                highlights: [
+                    { type: 'visit', name: '茱麗葉之家', link: 'Casa+di+Giulietta', desc: '觸摸茱麗葉銅像右胸祈求愛情順利。' },
+                    { type: 'buy', name: '檸檬糖/檸檬酒', link: 'Supermarket+near+Verona', desc: '維洛納周邊超市可購入伴手禮。' }
+                ],
+                story: '【景點故事】維洛納是羅密歐與茱麗葉的故鄉，圓形競技場保存完好，是羅馬時期遺產。'
+            },
+            {
+                day: 4, date: '12/08 (一)', location: '威尼斯 (Venice) 單飛時光',
+                weather: { temp: '2°C / 8°C', icon: '🌧️', condition: '威尼斯 - 潮濕多雨，注意保暖' },
+                main: '水都巷弄散策與貢多拉體驗',
+                details: [
+                    { type: 'sight', title: '威尼斯巷弄散策', content: '當地導遊帶領，步行前往聖馬可島。', color: 'bg-red-100' },
+                    { type: 'sight', title: '貢多拉體驗', content: '特別安排搭乘貢多拉 (五人一艘)，享受水巷行舟樂趣。', color: 'bg-red-100' },
+                    { type: 'meal', title: '午餐', content: '威尼斯墨魚麵佐炸海鮮+提拉米蘇', color: 'bg-green-100' },
+                    { type: 'meal', title: '晚餐', content: '單飛時光，敬請自理 (推薦海鮮小點)', color: 'bg-yellow-100' }
+                ],
+                hotel: { name: 'CROWNE PLAZA PADOVA', mapQuery: 'Crowne+Plaza+Padova', note: '位於帕多瓦(Padova)，距離威尼斯約40分鐘車程。' },
+                highlights: [
+                    { type: 'eat', name: 'Florian 花神咖啡館', link: 'Caffè+Florian', desc: '聖馬可廣場上，世界最美咖啡館之一。' },
+                    { type: 'eat', name: '炸海鮮 (Frito Misto)', link: 'Frito+Misto+Venice', desc: '隨手杯裝的炸海鮮，威尼斯街頭美食。' },
+                    { type: 'buy', name: '威尼斯面具/玻璃飾品', link: 'Venetian+Mask+Shop', desc: '精緻的手工面具與穆拉諾玻璃。' }
+                ],
+                story: '【景點故事】貢多拉是威尼斯標誌性的平底船，傳統上由單一船夫划動，常會唱歌娛樂遊客。'
+            },
+            {
+                day: 5, date: '12/09 (二)', location: '佛羅倫斯 (Florence)',
+                weather: { temp: '3°C / 10°C', icon: '🌤️', condition: '佛羅倫斯 - 涼爽舒適' },
+                main: '文藝復興浪漫之旅',
+                details: [
+                    { type: 'sight', title: '聖母百花大教堂', content: '文藝復興建築傑作，巨大圓頂為佛羅倫斯驕傲。', color: 'bg-red-100' },
+                    { type: 'sight', title: '領主廣場', content: '露天的美術館，海神噴泉與各式雕像群。', color: 'bg-red-100' },
+                    { type: 'meal', title: '午餐', content: '佛羅倫斯牛排風味料理佐酒水', color: 'bg-green-100' }
+                ],
+                hotel: { name: 'GRAND HOTEL CROCE DI MALTA', mapQuery: 'Grand+Hotel+Croce+di+Malta', note: '位於溫泉小鎮蒙泰卡蒂尼 (Montecatini Terme)。' },
+                highlights: [
+                    { type: 'eat', name: '牛肚包 (Lampredotto)', link: 'Da+Nerbone', desc: '中央市場內的人氣平民美食。' },
+                    { type: 'buy', name: 'SMN 百年修道院藥妝', link: 'Officina+Profumo-Farmaceutica+di+Santa+Maria+Novella', desc: '必買玫瑰水、金盞花霜。' },
+                    { type: 'buy', name: '蕾莉歐 (L\'Erbolario)', link: 'L\'Erbolario+Firenze', desc: '百花大教堂旁，台灣價差極大。' }
+                ],
+                story: '【景點故事】聖母百花大教堂的巨大圓頂由布魯內列斯基設計，是文藝復興的建築傑作，登頂需預約。'
+            },
+            {
+                day: 6, date: '12/10 (三)', location: '五漁村 → 比薩 (Pisa)',
+                weather: { temp: '5°C / 12°C', icon: '☀️', condition: '沿海地區氣溫稍高' },
+                main: '繽紛五漁村與舉世斜塔',
+                details: [
+                    { type: 'traffic', title: '火車遊五漁村', content: '搭乘火車進入其中二個漁村，欣賞繽紛房舍與葡萄園。', color: 'bg-indigo-100' },
+                    { type: 'sight', title: '比薩斜塔/奇蹟廣場', content: '世界遺產，參觀比薩大教堂與斜塔。', color: 'bg-red-100' },
+                    { type: 'meal', title: '午餐', content: '敬請自理 (可嘗試五漁村小吃)', color: 'bg-yellow-100' }
+                ],
+                hotel: { name: 'AC HOTEL PISA', mapQuery: 'AC+Hotel+Pisa', note: '位於比薩近郊，現代設計風格。' },
+                highlights: [
+                    { type: 'eat', name: '五漁村炸海鮮桶', link: 'Cinque+Terre+Fried+Seafood', desc: '新鮮現炸，搭配檸檬汁絕配。' },
+                    { type: 'visit', name: '比薩斜塔推塔照', link: 'Leaning+Tower+of+Pisa', desc: '發揮創意拍出最有趣的錯位照！' }
+                ],
+                story: '【景點故事】五漁村由五個彩色漁村組成，被列為世界遺產，需搭火車或船遊覽，是義大利最知名的海岸景觀之一。'
+            },
+            {
+                day: 7, date: '12/11 (四)', location: '托斯卡尼慢活之旅 → 羅馬',
+                weather: { temp: '5°C / 13°C', icon: '🌤️', condition: '羅馬 - 氣候溫和，陽光充足' },
+                main: '品酒體驗與山城巡禮',
+                details: [
+                    { type: 'sight', title: '托斯卡尼 酒莊品酒', content: '蒙特普齊亞諾周圍地區，品嚐當地葡萄酒。', color: 'bg-red-100' },
+                    { type: 'sight', title: '皮恩薩山城 (Pienza)', content: '被譽為「奧爾恰山谷的珍珠」，遠眺丘陵美景。', color: 'bg-red-100' },
+                    { type: 'traffic', title: '長程巴士', content: '皮恩薩 → 羅馬 (約 188KM)', color: 'bg-indigo-100' }
+                ],
+                hotel: { name: 'WARMTHOTEL', mapQuery: 'Warmthotel+Rome', note: '位於羅馬 EUR 區，設計新穎。' },
+                highlights: [
+                    { type: 'eat', name: '皮恩薩佩科里諾起司', link: 'Pecorino+Cheese+Pienza', desc: '當地的羊奶起司非常有名。' },
+                    { type: 'buy', name: '托斯卡尼紅酒', link: 'Tuscany+Winery', desc: 'Chianti 或 Brunello 都是頂級選擇。' }
+                ],
+                story: '【景點故事】皮恩薩山城是教宗庇護二世將家鄉打造成文藝復興理想城的典範，被譽為奧爾恰山谷的珍珠。'
+            },
+            {
+                day: 8, date: '12/12 (五)', location: '羅馬 (Rome)',
+                weather: { temp: '5°C / 13°C', icon: '☀️', condition: '羅馬 - 晴朗，適合步行觀光' },
+                main: '永恆之城一日市區觀光',
+                details: [
+                    { type: 'sight', title: '羅馬競技場 (Colosseum)', content: '古羅馬帝國的象徵，專業中文導遊全日導覽。', color: 'bg-red-100' },
+                    { type: 'sight', title: '許願池/西班牙廣場', content: '重溫《羅馬假期》的浪漫場景，並贈送金杯咖啡。', color: 'bg-red-100' },
+                    { type: 'sight', title: '聖彼得大教堂 (Vatican)', content: '全世界最大、最壯麗的教堂 (請勿穿著無袖/短裙)。', color: 'bg-red-100' },
+                    { type: 'meal', title: '晚餐', content: '羅馬小羔羊風味料理', color: 'bg-green-100' }
+                ],
+                hotel: { name: 'WARMTHOTEL', mapQuery: 'Warmthotel+Rome', note: '續住第二晚。' },
+                highlights: [
+                    { type: 'eat', name: '金杯咖啡 (Tazza d\'Oro)', link: 'Tazza+d\'Oro+Rome', desc: '羅馬最知名的咖啡，必喝 Espresso。' },
+                    { type: 'eat', name: 'Old Bridge Gelato', link: 'Old+Bridge+Gelateria', desc: '梵蒂岡附近的超人氣冰淇淋老店。' },
+                    { type: 'buy', name: '金杯咖啡豆/巧克力球', link: 'Tazza+d\'Oro+Rome', desc: '最佳伴手禮，巧克力球內含咖啡豆。' }
+                ],
+                story: '【景點故事】羅馬競技場是古羅馬最大的圓形鬥獸場，可容納五萬人，現存的遺跡是了解羅馬歷史的重要地點。'
+            },
+            {
+                day: 9, date: '12/13 (六)', location: '羅馬 → 杜拜',
+                weather: { temp: '6°C / 14°C', icon: '🛍️', condition: '購物日 - 羅馬' },
+                main: 'Outlet 購物天堂',
+                details: [
+                    { type: 'sight', title: 'Castel Romano Outlet', content: 'Designer Outlet滿足最後購物慾，約150家名牌商店。', color: 'bg-red-100' },
+                    { type: 'traffic', title: '羅馬達文西機場', content: 'EK098 (14:55) 羅馬 → 杜拜 (23:30)', color: 'bg-indigo-100' },
+                    { type: 'meal', title: '午餐/晚餐', content: '午餐自理，晚餐：機上餐食', color: 'bg-yellow-100' }
+                ],
+                highlights: [
+                    { type: 'buy', name: '精品名牌包', link: 'Castel+Romano+Designer+Outlet', desc: 'Gucci, Burberry 等品牌折扣大。' },
+                    { type: 'buy', name: 'Bialetti 摩卡壺', link: 'Bialetti+Store', desc: '義大利國民咖啡壺，造型可愛。' }
+                ],
+                story: '【購物攻略】回程是午後班機，特別安排 Outlet 在行程最後，讓您輕鬆購物，不必提早負擔戰利品。'
+            },
+            {
+                day: 10, date: '12/14 (日)', location: '杜拜 → 台北',
+                weather: { temp: 'N/A', icon: '🏡', condition: '長程飛行' },
+                main: '結束美好的旅程',
+                details: [
+                    { type: 'traffic', title: '長程航班', content: 'EK366 (03:40) 杜拜 → 台北 (15:35)', color: 'bg-indigo-100' },
+                    { type: 'meal', title: '餐食', content: '早餐：機上餐食', color: 'bg-green-100' }
+                ],
+                story: '義大利之旅圓滿結束，期待下次再會！'
+            }
+        ];
+
+        const notesData = [
+            { category: '必買紀念品伴手禮', icon: 'shopping-bag', color: 'bg-pink-100', text: '義大利必買清單：頂級**皮件**（佛羅倫斯）、精美手工蕾絲（威尼斯）、**摩卡壺/Bialetti咖啡機**、在地烈酒**檸檬酒（Limoncello）**、各大精品 Outlet 戰利品、以及羅馬著名的**金杯咖啡豆**。' },
+            { category: '義大利旅遊注意事項', icon: 'clipboard-list', color: 'bg-orange-100', text: '治安需特別留意**扒手**（尤其羅馬、米蘭地鐵與觀光區）。餐廳用餐通常需支付服務費（**Coperto**）。參觀教堂如聖彼得大教堂，服裝須**端莊**（勿無袖上衣、短褲/裙）。' },
+            { category: '簽證', icon: 'passport', color: 'bg-blue-100', text: '台灣旅客持有效護照**免申根簽證**，可於180天內停留最多90天。**護照效期**須在離開申根區時仍有3個月以上。' },
+            { category: '衣著建議 (12月冬季)', icon: 't-shirt', color: 'bg-purple-100', text: '冬季建議採用**洋蔥式穿法**：內層發熱衣、中層毛衣或羽絨背心、外層**防風防水大衣**。必備：**圍巾、手套、保暖帽**。鞋子以**防水防滑舒適**的款式為主。' },
+            { category: '網路電信推薦', icon: 'wifi', color: 'bg-teal-100', text: '推薦在台灣租借 WiFi 機，或購買義大利當地的電信公司 SIM 卡，例如 **TIM** 或 **Vodafone**，它們通常有適合短期遊客的方案。' },
+            { category: '防騙秘笈', icon: 'alert-triangle', color: 'bg-red-110', text: '常見騙局：**吉普賽小孩行乞**、**假警察查護照**、**鴿子飼料/幸運手環**。在人多地方（如羅馬競技場、許願池），背包務必**前背**並隨時警覺。' }
+        ];
+
+        // --- STATE & STORAGE ---
+        let currentDayIndex = 0; // 0-based index for itinerary data
+        let currentTab = 'itinerary';
+        let expenses = JSON.parse(localStorage.getItem('italy_expenses')) || [];
+        let googleSheetUrl = localStorage.getItem('italy_google_sheet') || '';
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderApp() {
+            lucide.createIcons();
+            const main = document.getElementById('main-content');
+            
+            if (currentTab === 'itinerary') {
+                document.getElementById('header-day-display').style.display = 'inline-block';
+                document.getElementById('header-day-display').innerText = `Day ${currentDayIndex + 1}`;
+                
+                main.innerHTML = `
+                    <div class="day-selector mb-4 px-2">
+                        ${itineraryData.map((_, idx) => `
+                            <button onclick="setDay(${idx})" class="day-chip ${idx === currentDayIndex ? 'active' : ''}">
+                                Day ${idx + 1}
+                            </button>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="flex justify-between items-center mb-2 px-2">
+                        <button onclick="changeDay(-1)" class="p-2 rounded-full bg-white shadow text-gray-600 disabled:opacity-30" ${currentDayIndex === 0 ? 'disabled' : ''}>
+                            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                        </button>
+                        <span class="text-sm text-gray-500 font-semibold">${itineraryData[currentDayIndex].date}</span>
+                        <button onclick="changeDay(1)" class="p-2 rounded-full bg-white shadow text-gray-600 disabled:opacity-30" ${currentDayIndex === itineraryData.length - 1 ? 'disabled' : ''}>
+                            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+
+                    <div id="day-card-container" class="fade-in">
+                        ${createItineraryCard(itineraryData[currentDayIndex])}
+                    </div>
+                `;
+            } else if (currentTab === 'notes') {
+                document.getElementById('header-day-display').style.display = 'none';
+                main.innerHTML = `
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 px-2 flex items-center">
+                        <i data-lucide="clipboard-list" class="w-5 h-5 mr-2 text-red-600"></i> 出發前準備清單
+                    </h2>
+                    <div class="space-y-6 px-2">
+                        ${notesData.map(createNoteCard).join('')}
+                    </div>
+                `;
+            } else if (currentTab === 'expenses') {
+                document.getElementById('header-day-display').style.display = 'none';
+                renderExpenses(main);
+            }
+            lucide.createIcons();
+        }
+
+        function createItineraryCard(item) {
+            const detailCards = item.details.map(detail => `
+                <div class="${detail.color} p-3 rounded-xl flex items-start text-sm border border-gray-300">
+                    <i data-lucide="${getIconName(detail.type)}" class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0 text-gray-700"></i>
+                    <div>
+                        <p class="font-semibold text-gray-700">${detail.title}</p>
+                        <p class="text-gray-600">${detail.content}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            let hotelSection = '';
+            if (item.hotel) {
+                const embedUrl = `https://maps.google.com/maps?q=${item.hotel.mapQuery}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+                const supermarketLink = `https://www.google.com/maps/search/supermarket+near+${item.hotel.mapQuery}`;
+                hotelSection = `
+                    <div class="mt-6 mb-4">
+                         <div class="flex items-center mb-2">
+                             <div class="tag bg-blue-600 text-white mr-2"><i data-lucide="bed-double" class="w-3 h-3 mr-1"></i> 今晚住宿</div>
+                             <h4 class="font-bold text-gray-800 text-sm">${item.hotel.name}</h4>
+                         </div>
+                         <p class="text-xs text-gray-500 mb-2">${item.hotel.note}</p>
+                         <div class="map-container shadow-md mb-2">
+                             <iframe src="${embedUrl}" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                         </div>
+                         <a href="${supermarketLink}" target="_blank" class="block w-full bg-white border border-blue-300 text-blue-600 text-center py-2 rounded-lg text-sm font-semibold hover:bg-blue-50 transition">
+                             <i data-lucide="shopping-basket" class="w-4 h-4 inline-block mr-1"></i> 尋找附近超市
+                         </a>
+                    </div>
+                `;
+            }
+
+            let highlightsSection = '';
+            if (item.highlights) {
+                const highlightItems = item.highlights.map(h => {
+                    let icon, colorClass, label;
+                    if (h.type === 'eat') { icon = 'utensils-crossed'; colorClass = 'text-orange-600 bg-orange-50 border-orange-200'; label = '必吃'; }
+                    else if (h.type === 'buy') { icon = 'shopping-bag'; colorClass = 'text-pink-600 bg-pink-50 border-pink-200'; label = '必買'; }
+                    else { icon = 'camera'; colorClass = 'text-indigo-600 bg-indigo-50 border-indigo-200'; label = '必去'; }
+                    const googleMapLink = `https://www.google.com/maps/search/?api=1&query=${h.link}`;
+                    return `
+                        <a href="${googleMapLink}" target="_blank" class="block mb-2 group">
+                            <div class="${colorClass} border p-2 rounded-lg flex items-center transition group-hover:shadow-md">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3 shadow-sm">
+                                    <i data-lucide="${icon}" class="w-4 h-4"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="flex items-center justify-between">
+                                        <p class="font-bold text-sm text-gray-800">${h.name}</p>
+                                        <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-white bg-opacity-50">${label}</span>
+                                    </div>
+                                    <p class="text-xs text-gray-600 truncate">${h.desc}</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+                highlightsSection = `
+                    <div class="mt-4 mb-6 border-t border-dashed border-gray-300 pt-4">
+                        <h4 class="font-bold text-gray-700 mb-3 flex items-center">
+                            <i data-lucide="star" class="w-4 h-4 mr-1 text-yellow-500 fill-current"></i> 今日推薦 • 必吃必買
+                        </h4>
+                        <div>${highlightItems}</div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="scrapbook-card bg-white p-5 rounded-3xl border-2 border-[#5a5a5a] relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -mr-8 -mt-8 z-0 opacity-50"></div>
+                    <div class="absolute top-3 left-3 w-3 h-3 bg-gray-600 rounded-full z-10"></div>
+                    <div class="absolute top-3 right-3 w-3 h-3 bg-gray-600 rounded-full z-10"></div>
+                    <div class="border-b-2 border-dashed border-gray-300 pb-3 mb-4 relative z-10">
+                        <h3 class="text-xl font-extrabold text-gray-800">${item.location}</h3>
+                    </div>
+                    <div class="bg-[#e0f2f1] text-teal-800 p-3 rounded-xl mb-4 flex justify-between items-center shadow-inner border border-teal-300 relative z-10">
+                        <div class="font-bold text-lg">${item.weather.icon} ${item.weather.temp}</div>
+                        <div class="text-right text-sm">
+                            <p class="font-semibold">即時天氣</p>
+                            <p>${item.weather.condition}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-3 mb-4 relative z-10">${detailCards}</div>
+                    ${highlightsSection}
+                    ${hotelSection}
+                    <div class="bg-yellow-50 p-4 rounded-xl shadow-inner border border-yellow-300 relative z-10">
+                        <p class="text-sm font-bold text-gray-700 mb-2 flex items-center">
+                            <i data-lucide="book-open-text" class="w-4 h-4 mr-1"></i> 旅行筆記
+                        </p>
+                        <p class="text-sm text-gray-600 leading-relaxed italic">${item.story}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createNoteCard(note) {
+            return `
+                <div class="p-4 rounded-xl shadow-lg scrapbook-card bg-white relative">
+                    <div class="absolute top-0 right-0 p-2 transform -translate-x-1 -translate-y-1 rounded-full ${note.color}">
+                         <i data-lucide="${note.icon}" class="w-5 h-5 text-gray-700"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2 text-red-600">${note.category}</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">${note.text}</p>
+                </div>
+            `;
+        }
+
+        function renderExpenses(container) {
+            const total = expenses.reduce((sum, item) => sum + item.amount, 0);
+            
+            // Google Sheet Logic
+            const hasSheet = googleSheetUrl && googleSheetUrl.trim() !== '';
+            
+            container.innerHTML = `
+                <div class="px-2 fade-in">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i data-lucide="wallet" class="w-5 h-5 mr-2 text-red-600"></i> 旅遊記帳
+                    </h2>
+                    
+                    <!-- Google Sheet Link Section -->
+                    <div class="bg-white p-4 rounded-xl scrapbook-card mb-6">
+                        <h3 class="font-bold text-gray-700 mb-2 flex items-center">
+                            <i data-lucide="sheet" class="w-4 h-4 mr-2 text-green-600"></i> Google 表格連結
+                        </h3>
+                        ${hasSheet ? `
+                            <a href="${googleSheetUrl}" target="_blank" class="block w-full bg-green-600 text-white text-center py-3 rounded-lg font-bold shadow-md hover:bg-green-700 transition mb-2">
+                                開啟我的記帳表
+                            </a>
+                            <button onclick="editSheetUrl()" class="text-xs text-gray-400 underline w-full text-center">修改連結</button>
+                        ` : `
+                            <p class="text-xs text-gray-500 mb-3">您可以建立一個 Google Sheet，並將網址貼在下方，即可一鍵跳轉。</p>
+                            <div class="flex gap-2">
+                                <input type="text" id="sheet-url-input" placeholder="貼上 Google Sheet 網址..." class="flex-1 border border-gray-300 rounded px-2 py-1 text-sm">
+                                <button onclick="saveSheetUrl()" class="bg-gray-800 text-white px-3 py-1 rounded text-sm">儲存</button>
+                            </div>
+                        `}
+                    </div>
+
+                    <!-- Local Expenses Section -->
+                    <div class="bg-white p-4 rounded-xl scrapbook-card mb-6">
+                        <h3 class="font-bold text-gray-700 mb-4">快速隨手記 (儲存於本機)</h3>
+                        <div class="flex justify-between items-end mb-4 p-3 bg-red-50 rounded-lg border border-red-100">
+                            <div>
+                                <p class="text-xs text-gray-500">目前總支出 (歐元)</p>
+                                <p class="text-2xl font-bold text-red-600">€ ${total.toFixed(2)}</p>
+                            </div>
+                            <button onclick="clearExpenses()" class="text-xs text-red-400 underline">清除所有</button>
+                        </div>
+                        
+                        <div class="flex gap-2 mb-4">
+                            <input type="text" id="exp-item" placeholder="項目 (如: 冰淇淋)" class="flex-1 border border-gray-300 rounded p-2 text-sm">
+                            <input type="number" id="exp-amount" placeholder="€" class="w-20 border border-gray-300 rounded p-2 text-sm">
+                        </div>
+                        <button onclick="addExpense()" class="w-full bg-gray-800 text-white py-2 rounded-lg font-semibold text-sm mb-4">新增支出</button>
+
+                        <div class="space-y-2 max-h-60 overflow-y-auto">
+                            ${expenses.length === 0 ? '<p class="text-center text-gray-400 text-sm py-4">尚無支出紀錄</p>' : 
+                                expenses.slice().reverse().map((item, index) => `
+                                    <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                        <span class="text-gray-700 text-sm">${item.item}</span>
+                                        <span class="font-bold text-gray-800 text-sm">€ ${item.amount}</span>
+                                    </div>
+                                `).join('')
+                            }
+                        </div>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // --- ACTIONS ---
+
+        function setDay(index) {
+            currentDayIndex = index;
+            renderApp();
+        }
+
+        function changeDay(offset) {
+            const newIndex = currentDayIndex + offset;
+            if (newIndex >= 0 && newIndex < itineraryData.length) {
+                currentDayIndex = newIndex;
+                renderApp();
+            }
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            // Update active state in bottom nav
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${tab}`).classList.add('active');
+            renderApp();
+        }
+
+        function getIconName(type) {
+            switch (type) {
+                case 'sight': return 'aperture';
+                case 'traffic': return 'bus';
+                case 'meal': return 'utensils';
+                default: return 'map-pin';
+            }
+        }
+
+        // --- EXPENSE FUNCTIONS ---
+        function addExpense() {
+            const itemInput = document.getElementById('exp-item');
+            const amountInput = document.getElementById('exp-amount');
+            const item = itemInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+
+            if (item && amount) {
+                expenses.push({ item, amount, date: new Date().toISOString() });
+                localStorage.setItem('italy_expenses', JSON.stringify(expenses));
+                renderApp();
+            }
+        }
+
+        function clearExpenses() {
+            if(confirm('確定要清除所有記帳資料嗎？')) {
+                expenses = [];
+                localStorage.setItem('italy_expenses', JSON.stringify(expenses));
+                renderApp();
+            }
+        }
+
+        function saveSheetUrl() {
+            const url = document.getElementById('sheet-url-input').value.trim();
+            if (url) {
+                googleSheetUrl = url;
+                localStorage.setItem('italy_google_sheet', googleSheetUrl);
+                renderApp();
+            }
+        }
+
+        function editSheetUrl() {
+            googleSheetUrl = '';
+            localStorage.setItem('italy_google_sheet', '');
+            renderApp();
+        }
+
+        // --- INIT ---
+        window.onload = function() {
+            renderApp();
+        }
+
+    </script>
+</body>
+</html>
