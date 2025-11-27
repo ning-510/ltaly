@@ -163,10 +163,12 @@
 
     <script>
         // --- DATA ---
+        // 加入 lat, lng 座標以供天氣 API 使用
         const itineraryData = [
             {
                 day: 1, date: '12/05 (五)', location: '台北 → 杜拜',
-                weather: { temp: '20°C / 25°C', icon: '☀️', condition: '桃園/杜拜 - 轉機' },
+                lat: 25.2532, lng: 55.3657, // Dubai Airport
+                weather: null, // Will be fetched
                 main: '集合：桃園機場第二航廈',
                 details: [
                     { type: 'traffic', title: '長程航班', content: 'EK367 (23:00) 台北 → 杜拜 (04:55+1)', color: 'bg-indigo-100' },
@@ -176,7 +178,8 @@
             },
             {
                 day: 2, date: '12/06 (六)', location: '杜拜 → 米蘭 (Milan)',
-                weather: { temp: '0°C / 8°C', icon: '🌥️', condition: '米蘭 - 涼爽，需防寒' },
+                lat: 45.4642, lng: 9.1900, // Milan
+                weather: null,
                 main: '米蘭市區觀光',
                 details: [
                     { type: 'sight', title: '米蘭大教堂 (Duomo)', content: '全世界最大的哥德式教堂，白色大理石外觀雄偉典雅。', color: 'bg-red-100' },
@@ -193,7 +196,8 @@
             },
             {
                 day: 3, date: '12/07 (日)', location: '馬焦雷湖 → 維洛納 (Verona)',
-                weather: { temp: '-1°C / 7°C', icon: '🌫️', condition: '維洛納 - 清晨可能結霜，多霧' },
+                lat: 45.4384, lng: 10.9916, // Verona
+                weather: null,
                 main: '北義湖區遊船體驗與維洛納古城',
                 details: [
                     { type: 'traffic', title: '馬焦雷湖 遊船', content: '義大利第二大湖，親訪不亞於瑞士的湖光山色。', color: 'bg-indigo-100' },
@@ -209,7 +213,8 @@
             },
             {
                 day: 4, date: '12/08 (一)', location: '威尼斯 (Venice) 單飛時光',
-                weather: { temp: '2°C / 8°C', icon: '🌧️', condition: '威尼斯 - 潮濕多雨，注意保暖' },
+                lat: 45.4408, lng: 12.3155, // Venice
+                weather: null,
                 main: '水都巷弄散策與貢多拉體驗',
                 details: [
                     { type: 'sight', title: '威尼斯巷弄散策', content: '當地導遊帶領，步行前往聖馬可島。', color: 'bg-red-100' },
@@ -227,7 +232,8 @@
             },
             {
                 day: 5, date: '12/09 (二)', location: '佛羅倫斯 (Florence)',
-                weather: { temp: '3°C / 10°C', icon: '🌤️', condition: '佛羅倫斯 - 涼爽舒適' },
+                lat: 43.7696, lng: 11.2558, // Florence
+                weather: null,
                 main: '文藝復興浪漫之旅',
                 details: [
                     { type: 'sight', title: '聖母百花大教堂', content: '文藝復興建築傑作，巨大圓頂為佛羅倫斯驕傲。', color: 'bg-red-100' },
@@ -244,7 +250,8 @@
             },
             {
                 day: 6, date: '12/10 (三)', location: '五漁村 → 比薩 (Pisa)',
-                weather: { temp: '5°C / 12°C', icon: '☀️', condition: '沿海地區氣溫稍高' },
+                lat: 43.7228, lng: 10.4016, // Pisa (using Pisa for weather as it's the endpoint)
+                weather: null,
                 main: '繽紛五漁村與舉世斜塔',
                 details: [
                     { type: 'traffic', title: '火車遊五漁村', content: '搭乘火車進入其中二個漁村，欣賞繽紛房舍與葡萄園。', color: 'bg-indigo-100' },
@@ -260,7 +267,8 @@
             },
             {
                 day: 7, date: '12/11 (四)', location: '托斯卡尼慢活之旅 → 羅馬',
-                weather: { temp: '5°C / 13°C', icon: '🌤️', condition: '羅馬 - 氣候溫和，陽光充足' },
+                lat: 41.9028, lng: 12.4964, // Rome
+                weather: null,
                 main: '品酒體驗與山城巡禮',
                 details: [
                     { type: 'sight', title: '托斯卡尼 酒莊品酒', content: '蒙特普齊亞諾周圍地區，品嚐當地葡萄酒。', color: 'bg-red-100' },
@@ -276,7 +284,8 @@
             },
             {
                 day: 8, date: '12/12 (五)', location: '羅馬 (Rome)',
-                weather: { temp: '5°C / 13°C', icon: '☀️', condition: '羅馬 - 晴朗，適合步行觀光' },
+                lat: 41.9028, lng: 12.4964, // Rome
+                weather: null,
                 main: '永恆之城一日市區觀光',
                 details: [
                     { type: 'sight', title: '羅馬競技場 (Colosseum)', content: '古羅馬帝國的象徵，專業中文導遊全日導覽。', color: 'bg-red-100' },
@@ -294,7 +303,8 @@
             },
             {
                 day: 9, date: '12/13 (六)', location: '羅馬 → 杜拜',
-                weather: { temp: '6°C / 14°C', icon: '🛍️', condition: '購物日 - 羅馬' },
+                lat: 41.9028, lng: 12.4964, // Rome
+                weather: null,
                 main: 'Outlet 購物天堂',
                 details: [
                     { type: 'sight', title: 'Castel Romano Outlet', content: 'Designer Outlet滿足最後購物慾，約150家名牌商店。', color: 'bg-red-100' },
@@ -309,7 +319,8 @@
             },
             {
                 day: 10, date: '12/14 (日)', location: '杜拜 → 台北',
-                weather: { temp: 'N/A', icon: '🏡', condition: '長程飛行' },
+                lat: 25.2532, lng: 55.3657, // Dubai
+                weather: null,
                 main: '結束美好的旅程',
                 details: [
                     { type: 'traffic', title: '長程航班', content: 'EK366 (03:40) 杜拜 → 台北 (15:35)', color: 'bg-indigo-100' },
@@ -332,7 +343,6 @@
         let currentDayIndex = 0;
         let currentTab = 'itinerary';
         let expenses = JSON.parse(localStorage.getItem('italy_expenses')) || [];
-        // 將預設的 Apps Script URL 填入
         let googleWebAppUrl = localStorage.getItem('italy_google_webapp_url') || 'https://script.google.com/macros/s/AKfycbwTee899sdmcfi0-9daLE32tEWEqz1WdS48rFlHM6r75HI3cqeGzk-RKvNK9GuiFwcuIw/exec'; 
         let showClearConfirm = false;
 
@@ -368,6 +378,10 @@
                         ${createItineraryCard(itineraryData[currentDayIndex])}
                     </div>
                 `;
+                
+                // 檢查是否需要抓取天氣
+                checkAndFetchWeather(currentDayIndex);
+
             } else if (currentTab === 'notes') {
                 document.getElementById('header-day-display').style.display = 'none';
                 main.innerHTML = `
@@ -453,6 +467,26 @@
                 `;
             }
 
+            // 產生天氣 HTML
+            let weatherHtml = '';
+            if (item.weather) {
+                weatherHtml = `
+                    <div class="bg-[#e0f2f1] text-teal-800 p-3 rounded-xl mb-4 flex justify-between items-center shadow-inner border border-teal-300 relative z-10">
+                        <div class="font-bold text-lg">${item.weather.icon} ${item.weather.temp}</div>
+                        <div class="text-right text-sm">
+                            <p class="font-semibold">當地即時天氣</p>
+                            <p>${item.weather.condition}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                weatherHtml = `
+                    <div class="bg-gray-100 text-gray-500 p-3 rounded-xl mb-4 flex justify-center items-center shadow-inner border border-gray-200 relative z-10">
+                        <span class="spinner mr-2"></span> 正在載入當地氣溫...
+                    </div>
+                `;
+            }
+
             return `
                 <div class="scrapbook-card bg-white p-5 rounded-3xl border-2 border-[#5a5a5a] relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -mr-8 -mt-8 z-0 opacity-50"></div>
@@ -461,13 +495,9 @@
                     <div class="border-b-2 border-dashed border-gray-300 pb-3 mb-4 relative z-10">
                         <h3 class="text-xl font-extrabold text-gray-800">${item.location}</h3>
                     </div>
-                    <div class="bg-[#e0f2f1] text-teal-800 p-3 rounded-xl mb-4 flex justify-between items-center shadow-inner border border-teal-300 relative z-10">
-                        <div class="font-bold text-lg">${item.weather.icon} ${item.weather.temp}</div>
-                        <div class="text-right text-sm">
-                            <p class="font-semibold">即時天氣</p>
-                            <p>${item.weather.condition}</p>
-                        </div>
-                    </div>
+                    
+                    ${weatherHtml}
+
                     <div class="space-y-3 mb-4 relative z-10">${detailCards}</div>
                     ${highlightsSection}
                     ${hotelSection}
@@ -642,6 +672,76 @@
                 case 'meal': return 'utensils';
                 default: return 'map-pin';
             }
+        }
+
+        // --- WEATHER API FUNCTIONS ---
+        
+        function checkAndFetchWeather(index) {
+            const item = itineraryData[index];
+            // 如果還沒有天氣資料，或資料已經超過 1 小時 (避免頻繁請求)，就抓取新的
+            const now = new Date().getTime();
+            if (!item.weather || (item.weatherTimestamp && now - item.weatherTimestamp > 3600000)) {
+                fetchWeather(index, item.lat, item.lng);
+            }
+        }
+
+        async function fetchWeather(index, lat, lng) {
+            try {
+                // 使用 Open-Meteo 免費 API
+                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&timezone=auto`);
+                const data = await response.json();
+                
+                if (data.current) {
+                    const temp = Math.round(data.current.temperature_2m);
+                    const code = data.current.weather_code;
+                    const weatherInfo = getWeatherDescription(code);
+                    
+                    // 更新數據
+                    itineraryData[index].weather = {
+                        temp: `${temp}°C`,
+                        icon: weatherInfo.icon,
+                        condition: weatherInfo.desc
+                    };
+                    itineraryData[index].weatherTimestamp = new Date().getTime();
+                    
+                    // 只有當使用者還停留在這一頁時才重新渲染，避免跳動
+                    if (currentDayIndex === index) {
+                        renderApp();
+                    }
+                }
+            } catch (error) {
+                console.error("Weather fetch failed:", error);
+                itineraryData[index].weather = {
+                    temp: "--",
+                    icon: "⚠️",
+                    condition: "暫時無法取得天氣"
+                };
+                renderApp();
+            }
+        }
+
+        // WMO Weather Codes 轉換表
+        function getWeatherDescription(code) {
+            // 0: Clear sky
+            if (code === 0) return { icon: '☀️', desc: '晴朗' };
+            // 1, 2, 3: Mainly clear, partly cloudy, and overcast
+            if (code === 1) return { icon: '🌤️', desc: '大致晴朗' };
+            if (code === 2) return { icon: '⛅', desc: '多雲' };
+            if (code === 3) return { icon: '☁️', desc: '陰天' };
+            // 45, 48: Fog
+            if (code === 45 || code === 48) return { icon: '🌫️', desc: '有霧' };
+            // 51, 53, 55: Drizzle
+            if (code >= 51 && code <= 55) return { icon: '🌧️', desc: '毛毛雨' };
+            // 61, 63, 65: Rain
+            if (code >= 61 && code <= 67) return { icon: '🌧️', desc: '下雨' };
+            // 71-77: Snow
+            if (code >= 71 && code <= 77) return { icon: '❄️', desc: '下雪' };
+            // 80-82: Rain showers
+            if (code >= 80 && code <= 82) return { icon: '🌦️', desc: '陣雨' };
+            // 95-99: Thunderstorm
+            if (code >= 95 && code <= 99) return { icon: '⛈️', desc: '雷雨' };
+            
+            return { icon: '🌡️', desc: '未知天氣' };
         }
 
         // --- EXPENSE FUNCTIONS ---
