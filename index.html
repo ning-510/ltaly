@@ -319,12 +319,12 @@
             }
         ];
 
+        // 移除 "網路電信推薦"
         const notesData = [
             { category: '必買紀念品伴手禮', icon: 'shopping-bag', color: 'bg-pink-100', text: '義大利必買清單：頂級**皮件**（佛羅倫斯）、精美手工蕾絲（威尼斯）、**摩卡壺/Bialetti咖啡機**、在地烈酒**檸檬酒（Limoncello）**、各大精品 Outlet 戰利品、以及羅馬著名的**金杯咖啡豆**。' },
             { category: '義大利旅遊注意事項', icon: 'clipboard-list', color: 'bg-orange-100', text: '治安需特別留意**扒手**（尤其羅馬、米蘭地鐵與觀光區）。餐廳用餐通常需支付服務費（**Coperto**）。參觀教堂如聖彼得大教堂，服裝須**端莊**（勿無袖上衣、短褲/裙）。' },
             { category: '簽證', icon: 'passport', color: 'bg-blue-100', text: '台灣旅客持有效護照**免申根簽證**，可於180天內停留最多90天。**護照效期**須在離開申根區時仍有3個月以上。' },
             { category: '衣著建議 (12月冬季)', icon: 't-shirt', color: 'bg-purple-100', text: '冬季建議採用**洋蔥式穿法**：內層發熱衣、中層毛衣或羽絨背心、外層**防風防水大衣**。必備：**圍巾、手套、保暖帽**。鞋子以**防水防滑舒適**的款式為主。' },
-            { category: '網路電信推薦', icon: 'wifi', color: 'bg-teal-100', text: '推薦在台灣租借 WiFi 機，或購買義大利當地的電信公司 SIM 卡，例如 **TIM** 或 **Vodafone**，它們通常有適合短期遊客的方案。' },
             { category: '防騙秘笈', icon: 'alert-triangle', color: 'bg-red-110', text: '常見騙局：**吉普賽小孩行乞**、**假警察查護照**、**鴿子飼料/幸運手環**。在人多地方（如羅馬競技場、許願池），背包務必**前背**並隨時警覺。' }
         ];
 
@@ -332,7 +332,8 @@
         let currentDayIndex = 0;
         let currentTab = 'itinerary';
         let expenses = JSON.parse(localStorage.getItem('italy_expenses')) || [];
-        let googleWebAppUrl = localStorage.getItem('italy_google_webapp_url') || ''; // 變更為 Apps Script URL
+        // 將預設的 Apps Script URL 填入
+        let googleWebAppUrl = localStorage.getItem('italy_google_webapp_url') || 'https://script.google.com/macros/s/AKfycbwTee899sdmcfi0-9daLE32tEWEqz1WdS48rFlHM6r75HI3cqeGzk-RKvNK9GuiFwcuIw/exec'; 
         let showClearConfirm = false;
 
         // --- RENDER FUNCTIONS ---
@@ -701,6 +702,8 @@
                         statusMsg.className = 'text-center text-xs h-4 mb-2 text-orange-600';
                     })
                     .finally(() => {
+                        btn.disabled = false;
+                        btn.innerText = '新增支出';
                         renderApp(); // Re-render to show updated list
                     });
                 } else {
