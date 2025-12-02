@@ -15,7 +15,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #f7f3e8;
             background-image: url("data:image/svg+xml,%3Csvg width='42' height='44' viewBox='0 0 42 44' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Page-1' fill='none' fill-rule='evenodd'%3E%3Cg id='brick-wall' fill='%23e0d8c0' fill-opacity='0.4'%3E%3Cpath d='M0 0h42v44H0z'/%3E%3Cpath d='M0 4h20v24H0zM22 10h20v24H22z' opacity='.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            padding-bottom: 80px; /* 為底部導航留空間 */
+            padding-bottom: 90px; /* 為底部導航留更多空間 */
         }
         .tag {
             padding: 2px 8px;
@@ -30,9 +30,10 @@
             box-shadow: 6px 6px 0px rgba(90, 90, 90, 0.2);
             transition: transform 0.2s;
         }
+        /* Google Map iframe container */
         .map-container {
             position: relative;
-            padding-bottom: 56.25%;
+            padding-bottom: 56.25%; /* 16:9 ratio */
             height: 0;
             overflow: hidden;
             border-radius: 0.75rem;
@@ -66,6 +67,7 @@
             font-size: 0.75rem;
             color: #6b7280;
             width: 100%;
+            padding: 4px 0;
         }
         .nav-item.active {
             color: #dc2626; /* Red-600 */
@@ -151,6 +153,10 @@
             <i data-lucide="map-pinned" class="w-6 h-6 mb-1"></i>
             <span>行程</span>
         </button>
+        <button onclick="switchTab('places')" class="nav-item" id="nav-places">
+            <i data-lucide="map" class="w-6 h-6 mb-1"></i>
+            <span>私房點</span>
+        </button>
         <button onclick="switchTab('expenses')" class="nav-item" id="nav-expenses">
             <i data-lucide="wallet" class="w-6 h-6 mb-1"></i>
             <span>記帳</span>
@@ -163,13 +169,13 @@
 
     <script>
         // --- DATA ---
-        // 更新：詳細三餐(含 Google Map 連結)、氣溫 Range
         const itineraryData = [
             {
                 day: 1, date: '12/05 (五)', location: '台北 → 杜拜',
                 lat: 25.0797, lng: 121.2342, // Taoyuan Airport
                 locationName: '📍 桃園 Taoyuan',
                 weather: null,
+                main: '集合：桃園機場第二航廈', // Main title added here
                 details: [
                     { type: 'info', title: '集合資訊', content: '20:00 桃園機場第二航廈 阿聯酋航空團體櫃台', color: 'bg-red-100' },
                     { type: 'flight', title: '阿聯酋航空 EK367', content: '23:00 台北 TPE ✈️ 04:55+1 杜拜 DXB (飛行 09h55m)', color: 'bg-blue-100' },
@@ -183,11 +189,13 @@
                 lat: 45.4642, lng: 9.1900, // Milan
                 locationName: '📍 米蘭 Milan',
                 weather: null,
+                main: '米蘭市區觀光',
                 details: [
                     { type: 'flight', title: '阿聯酋航空 EK205', content: '09:05 杜拜 DXB ✈️ 13:10 米蘭 MXP (飛行 07h05m)', color: 'bg-blue-100' },
-                    { type: 'sight', title: '米蘭市區觀光', content: '米蘭大教堂 (外觀)、艾曼紐二世迴廊', color: 'bg-red-100' },
+                    { type: 'sight', title: '觀光景點', content: '米蘭大教堂 (外觀)、艾曼紐二世迴廊', color: 'bg-red-100' },
+                    { type: 'f1', title: '🏎️ F1 阿布達比站 排位賽', content: '阿布達比時間 18:00 | 🇮🇹 義大利直播時間 15:00', color: 'bg-gray-100 border-red-500 border-l-4' },
                     { type: 'meal', title: '早餐', content: '機上餐食', color: 'bg-green-50' },
-                    { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://maps.google.com/?q=Luini+Milano" target="_blank" class="text-blue-600 underline font-bold">📍Luini (炸三明治)</a> 或 <a href="https://maps.google.com/?q=Spontini+Milano+Duomo" target="_blank" class="text-blue-600 underline font-bold">📍Spontini (厚比薩)</a> - 都在教堂旁，平價美味', color: 'bg-yellow-100' },
+                    { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/Luini+Milano" target="_blank" class="text-blue-600 underline font-bold">📍Luini (炸三明治)</a> 或 <a href="https://www.google.com/maps/search/Spontini+Milano+Duomo" target="_blank" class="text-blue-600 underline font-bold">📍Spontini (厚比薩)</a> - 都在教堂旁，平價美味', color: 'bg-yellow-100' },
                     { type: 'meal', title: '晚餐', content: '米蘭燉飯風味料理', color: 'bg-green-100' },
                 ],
                 hotel: { name: 'UNAHOTELS MALPENSA', mapQuery: 'UNAHOTELS+Malpensa', note: '位於米蘭馬爾彭薩機場附近，現代化舒適飯店。' },
@@ -201,9 +209,11 @@
                 lat: 45.4384, lng: 10.9916, // Verona
                 locationName: '📍 維洛納 Verona',
                 weather: null,
+                main: '北義湖區遊船與古城',
                 details: [
                     { type: 'traffic', title: '馬焦雷湖 遊船', content: '北義湖區遊船體驗，欣賞湖光山色。', color: 'bg-indigo-100' },
                     { type: 'sight', title: '維洛納古城', content: '圓形競技場 (外觀)、茱麗葉故居 (外觀)', color: 'bg-red-100' },
+                    { type: 'f1', title: '🏁 F1 阿布達比站 正賽', content: '阿布達比時間 17:00 | 🇮🇹 義大利直播時間 14:00', color: 'bg-gray-100 border-red-500 border-l-4' },
                     { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐', content: '西式風味料理', color: 'bg-green-100' },
                     { type: 'meal', title: '晚餐', content: '百年教堂義式披薩風味料理', color: 'bg-green-100' }
@@ -218,11 +228,12 @@
                 lat: 45.4408, lng: 12.3155, // Venice
                 locationName: '📍 威尼斯 Venice',
                 weather: null,
+                main: '水都巷弄散策與貢多拉',
                 details: [
                     { type: 'sight', title: '威尼斯本島', content: '巷弄散策、貢多拉體驗 (5人一艘)', color: 'bg-red-100' },
                     { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐', content: '威尼斯墨魚麵佐炸海鮮+提拉米蘇', color: 'bg-green-100' },
-                    { type: 'meal', title: '晚餐 (自理推薦)', content: '<a href="https://maps.google.com/?q=Dal+Moro\'s+Fresh+Pasta+to+Go" target="_blank" class="text-blue-600 underline font-bold">📍Dal Moro\'s (外帶義大利麵)</a> 或 <a href="https://maps.google.com/?q=Fried+Land+Venice" target="_blank" class="text-blue-600 underline font-bold">📍Fried Land (炸海鮮)</a> - 聖馬可區高CP值', color: 'bg-yellow-100' }
+                    { type: 'meal', title: '晚餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/Dal+Moro\'s+Fresh+Pasta+to+Go" target="_blank" class="text-blue-600 underline font-bold">📍Dal Moro\'s (外帶義大利麵)</a> 或 <a href="https://www.google.com/maps/search/Fried+Land+Venice" target="_blank" class="text-blue-600 underline font-bold">📍Fried Land (炸海鮮)</a> - 聖馬可區高CP值', color: 'bg-yellow-100' }
                 ],
                 hotel: { name: 'CROWNE PLAZA PADOVA', mapQuery: 'Crowne+Plaza+Padova', note: '位於帕多瓦(Padova)，距離威尼斯約40分鐘車程。' },
                 highlights: [
@@ -235,8 +246,9 @@
                 lat: 43.7696, lng: 11.2558, // Florence
                 locationName: '📍 佛羅倫斯 Florence',
                 weather: null,
+                main: '文藝復興浪漫之旅',
                 details: [
-                    { type: 'sight', title: '文藝復興之旅', content: '聖母百花大教堂、領主廣場、老橋', color: 'bg-red-100' },
+                    { type: 'sight', title: '市區觀光', content: '聖母百花大教堂、領主廣場、老橋', color: 'bg-red-100' },
                     { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐', content: '佛羅倫斯牛排風味料理佐酒水', color: 'bg-green-100' },
                     { type: 'meal', title: '晚餐', content: '中式料理六菜一湯', color: 'bg-green-100' }
@@ -252,11 +264,12 @@
                 lat: 44.1270, lng: 9.7094, // Cinque Terre (Monterosso)
                 locationName: '📍 五漁村 Cinque Terre',
                 weather: null,
+                main: '繽紛五漁村與舉世斜塔',
                 details: [
                     { type: 'traffic', title: '五漁村火車', content: '搭乘火車遊覽其中兩個漁村', color: 'bg-indigo-100' },
                     { type: 'sight', title: '比薩斜塔', content: '奇蹟廣場、比薩大教堂', color: 'bg-red-100' },
                     { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
-                    { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://maps.google.com/?q=Il+Pescato+Cucinato+Riomaggiore" target="_blank" class="text-blue-600 underline font-bold">📍Il Pescato Cucinato (炸海鮮筒)</a> - Riomaggiore 村著名街頭小吃', color: 'bg-yellow-100' },
+                    { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/Il+Pescato+Cucinato+Riomaggiore" target="_blank" class="text-blue-600 underline font-bold">📍Il Pescato Cucinato (炸海鮮筒)</a> - Riomaggiore 村著名街頭小吃', color: 'bg-yellow-100' },
                     { type: 'meal', title: '晚餐', content: '中式料理六菜一湯', color: 'bg-green-100' }
                 ],
                 hotel: { name: 'AC HOTEL PISA', mapQuery: 'AC+Hotel+Pisa', note: '位於比薩近郊，現代設計風格。' },
@@ -270,6 +283,7 @@
                 lat: 43.0773, lng: 11.6123, // Pienza
                 locationName: '📍 皮恩薩 Pienza',
                 weather: null,
+                main: '托斯卡尼慢活之旅',
                 details: [
                     { type: 'sight', title: '托斯卡尼酒莊', content: '品酒體驗', color: 'bg-red-100' },
                     { type: 'sight', title: '皮恩薩山城', content: '漫步世界遺產山城', color: 'bg-red-100' },
@@ -287,6 +301,7 @@
                 lat: 41.9028, lng: 12.4964, // Rome
                 locationName: '📍 羅馬 Rome',
                 weather: null,
+                main: '永恆之城一日市區觀光',
                 details: [
                     { type: 'sight', title: '羅馬市區觀光', content: '競技場(外觀)、許願池、西班牙廣場、聖彼得大教堂(入內)', color: 'bg-red-100' },
                     { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
@@ -304,11 +319,12 @@
                 lat: 41.7137, lng: 12.4439, // Castel Romano Outlet
                 locationName: '📍 羅馬 Outlet',
                 weather: null,
+                main: 'Outlet 購物天堂',
                 details: [
                     { type: 'sight', title: 'Castel Romano Outlet', content: '名牌折扣村購物', color: 'bg-red-100' },
                     { type: 'flight', title: '阿聯酋航空 EK098', content: '14:55 羅馬 FCO ✈️ 23:30 杜拜 DXB (飛行 05h35m)', color: 'bg-blue-100' },
                     { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
-                    { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://maps.google.com/?q=Farinella+Castel+Romano" target="_blank" class="text-blue-600 underline font-bold">📍Farinella (Outlet內)</a> 或 機場內輕食 - 把握時間購物', color: 'bg-yellow-100' },
+                    { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/Farinella+Castel+Romano" target="_blank" class="text-blue-600 underline font-bold">📍Farinella (Outlet內)</a> 或 機場內輕食', color: 'bg-yellow-100' },
                     { type: 'meal', title: '晚餐', content: '機上餐食', color: 'bg-green-100' }
                 ],
                 highlights: [
@@ -321,42 +337,43 @@
                 lat: 25.2532, lng: 55.3657, // Dubai
                 locationName: '📍 杜拜 Dubai',
                 weather: null,
+                main: '結束美好的旅程',
                 details: [
                     { type: 'flight', title: '阿聯酋航空 EK366', content: '03:40 杜拜 DXB ✈️ 15:35 台北 TPE (飛行 07h55m)', color: 'bg-blue-100' },
                     { type: 'meal', title: '早餐', content: '機上餐食', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐', content: 'X', color: 'bg-gray-100' },
                     { type: 'meal', title: '晚餐', content: 'X', color: 'bg-gray-100' }
-                ],
-                story: '旅程圓滿結束，帶著滿滿的回憶回家。' 
+                ]
             }
         ];
 
-        // --- 新增：伴手禮推薦數據 (含圖片) ---
+        // --- 伴手禮推薦數據 (使用更穩定的公開連結或Placeholder) ---
         const shoppingList = [
             {
-                category: '杜拜機場',
+                category: '杜拜機場 Dubai Airport',
                 items: [
-                    { name: 'Patchi 巧克力', desc: '中東巧克力界的愛馬仕，包裝精美，送禮首選。', img: 'https://m.media-amazon.com/images/I/61Kk-y+XQ0L.jpg' },
-                    { name: 'Bateel 椰棗', desc: '頂級皇家椰棗，口感綿密，適合配茶。', img: 'https://bateel.com/media/catalog/product/cache/7c0337d38006fa738497220226273252/k/h/kholas_plain.jpg' },
-                    { name: '駱駝奶皂', desc: '保濕滋潤，杜拜特色伴手禮。', img: 'https://images-na.ssl-images-amazon.com/images/I/71%2BgvKqK3IL._AC_SL1500_.jpg' }
+                    { name: 'Patchi 巧克力', desc: '中東巧克力界的愛馬仕，包裝精美，送禮首選。', img: '' }, 
+                    { name: 'Bateel 椰棗', desc: '頂級皇家椰棗，口感綿密，適合配茶。', img: '' },
+                    { name: '駱駝奶皂', desc: '保濕滋潤，杜拜特色伴手禮。', img: '[Image of Camel Soap]' }
                 ]
             },
             {
-                category: '義大利超市必買',
+                category: '義大利超市必買 Italy Supermarket',
                 items: [
-                    { name: 'Pocket Coffee', desc: '金莎出的「濃縮咖啡巧克力」，咬下去有咖啡液流出！(僅冬季限定)', img: 'https://www.ferrero.it/content/dam/ferrero/it/assets/pocket-coffee/product/Pocket-Coffee-Pack-18-pezzi.png' },
-                    { name: 'Baci 巧克力', desc: '義大利國寶級巧克力，每一顆裡面都有一張愛的小紙條。', img: 'https://www.baciperugina.com/sites/default/files/styles/product_detail/public/2022-09/Baci_Original_Dark_Tube_3pcs_37-5g_0.png?itok=3e8g7j7_' },
-                    { name: 'Marvis 牙膏', desc: '牙膏界的愛馬仕，超市買比台灣便宜非常多！', img: 'https://m.media-amazon.com/images/I/61X+yKk+XQL._AC_SL1000_.jpg' },
-                    { name: 'Mulino Bianco 餅乾', desc: '義大利國民餅乾品牌，Baiocchi (榛果夾心) 最受歡迎。', img: 'https://www.mulinobianco.it/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/b/a/baiocchi_1.png' },
-                    { name: '松露醬 (Tartufo)', desc: '超市就能買到平價松露醬，拌麵、塗麵包都超好吃。', img: 'https://m.media-amazon.com/images/I/81y+yKk+XQL._AC_SL1500_.jpg' },
-                    { name: 'Limoncello 檸檬酒', desc: '南義特產，飯後消化酒，記得要冰在冷凍庫喝。', img: 'https://m.media-amazon.com/images/I/71+yKk+XQL._AC_SL1500_.jpg' },
-                    { name: '金杯咖啡豆', desc: '羅馬許願池旁必買，女王咖啡豆 (La Regina dei Caffe)。', img: 'https://tazzadorocoffeeshop.com/wp-content/uploads/2016/06/regina-dei-caffe-macinato-250g.jpg' }
+                    { name: 'Pocket Coffee', desc: '金莎出的「濃縮咖啡巧克力」，咬下去有咖啡液流出！', img: '' },
+                    { name: 'Baci 巧克力', desc: '義大利國寶級巧克力，每顆都有愛的小紙條。', img: '[Image of Baci Chocolate]' },
+                    { name: 'Marvis 牙膏', desc: '牙膏界的愛馬仕，超市買比台灣便宜非常多！', img: '' },
+                    { name: 'Mulino Bianco 餅乾', desc: '義大利國民餅乾品牌，Baiocchi (榛果夾心) 最受歡迎。', img: '' },
+                    { name: '松露醬 (Tartufo)', desc: '超市就能買到平價松露醬，拌麵、塗麵包都超好吃。', img: '[Image of Truffle Sauce]' },
+                    { name: 'Limoncello 檸檬酒', desc: '南義特產，飯後消化酒，記得要冰在冷凍庫喝。', img: '' },
+                    { name: '金杯咖啡豆', desc: '羅馬許願池旁必買，女王咖啡豆。', img: '' }
                 ]
             }
         ];
 
-        // 移除 "網路電信推薦"
+        // 須知
         const notesData = [
+            { category: 'F1 直播收看指南', icon: 'tv', color: 'bg-red-100', text: '愛爾達/Hami Video 在義大利無法直接收看(受地區限制)。建議：<br>1. <b>使用 VPN</b> 連回台灣觀看 (推薦 NordVPN, ExpressVPN)。<br>2. 飯店電視轉到 <b>Sky Sport F1</b> (頻道 207)。<br>3. 前往當地的 Sports Bar (米蘭/維洛納都有許多愛爾蘭酒吧轉播)。' },
             { category: '義大利旅遊注意事項', icon: 'clipboard-list', color: 'bg-orange-100', text: '治安需特別留意**扒手**（尤其羅馬、米蘭地鐵與觀光區）。餐廳用餐通常需支付服務費（**Coperto**）。參觀教堂如聖彼得大教堂，服裝須**端莊**（勿無袖上衣、短褲/裙）。' },
             { category: '簽證', icon: 'passport', color: 'bg-blue-100', text: '台灣旅客持有效護照**免申根簽證**，可於180天內停留最多90天。**護照效期**須在離開申根區時仍有3個月以上。' },
             { category: '衣著建議 (12月冬季)', icon: 't-shirt', color: 'bg-purple-100', text: '冬季建議採用**洋蔥式穿法**：內層發熱衣、中層毛衣或羽絨背心、外層**防風防水大衣**。必備：**圍巾、手套、保暖帽**。鞋子以**防水防滑舒適**的款式為主。' },
@@ -367,14 +384,31 @@
         let currentDayIndex = 0;
         let currentTab = 'itinerary';
         let expenses = JSON.parse(localStorage.getItem('italy_expenses')) || [];
+        let myPlaces = JSON.parse(localStorage.getItem('italy_my_places')) || [];
         let googleWebAppUrl = localStorage.getItem('italy_google_webapp_url') || 'https://script.google.com/macros/s/AKfycbwTee899sdmcfi0-9daLE32tEWEqz1WdS48rFlHM6r75HI3cqeGzk-RKvNK9GuiFwcuIw/exec'; 
         let showClearConfirm = false;
+
+        // Locations list for grouping spots
+        const locations = [
+            { id: 'Milan', name: '📍 米蘭 Milan' },
+            { id: 'Verona', name: '📍 維洛納 Verona' },
+            { id: 'Venice', name: '📍 威尼斯 Venice' },
+            { id: 'Florence', name: '📍 佛羅倫斯 Florence' },
+            { id: 'CinqueTerre', name: '📍 五漁村 Cinque Terre' },
+            { id: 'Pisa', name: '📍 比薩 Pisa' },
+            { id: 'Pienza', name: '📍 皮恩薩 Pienza' },
+            { id: 'Rome', name: '📍 羅馬 Rome' },
+            { id: 'Dubai', name: '📍 杜拜 Dubai' },
+            { id: 'Other', name: '📍 其他 Other' }
+        ];
 
         // --- RENDER FUNCTIONS ---
         function renderApp() {
             lucide.createIcons();
             const main = document.getElementById('main-content');
             
+            main.className = 'pb-4';
+
             if (currentTab === 'itinerary') {
                 document.getElementById('header-day-display').style.display = 'inline-block';
                 document.getElementById('header-day-display').innerText = `Day ${currentDayIndex + 1}`;
@@ -405,6 +439,9 @@
                 
                 checkAndFetchWeather(currentDayIndex);
 
+            } else if (currentTab === 'places') {
+                document.getElementById('header-day-display').style.display = 'none';
+                renderPlaces(main);
             } else if (currentTab === 'notes') {
                 document.getElementById('header-day-display').style.display = 'none';
                 
@@ -418,7 +455,9 @@
                         <div class="grid grid-cols-2 gap-4 relative z-10">
                             ${cat.items.map(item => `
                                 <div class="border rounded-lg p-2 flex flex-col items-center text-center bg-gray-50">
-                                    <img src="${item.img}" alt="${item.name}" class="w-20 h-20 object-contain mb-2 mix-blend-multiply" onerror="this.src='https://placehold.co/100x100?text=No+Image'">
+                                    <div class="w-20 h-20 bg-gray-200 mb-2 flex items-center justify-center text-xs text-gray-500 rounded-md overflow-hidden">
+                                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/100x100?text=${encodeURIComponent(item.name)}'">
+                                    </div>
                                     <p class="font-bold text-sm text-gray-800 mb-1">${item.name}</p>
                                     <p class="text-xs text-gray-500 leading-tight">${item.desc}</p>
                                 </div>
@@ -449,6 +488,209 @@
             lucide.createIcons();
         }
 
+        // --- PLACES FUNCTIONS ---
+        // Fetch places from Google Sheet on load
+        function fetchPlaces() {
+            if (!googleWebAppUrl) return;
+            
+            fetch(googleWebAppUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'get_places' }) 
+            })
+            // Note: with no-cors and simple Apps Script we can't easily get data back directly in this simple setup
+            // For a robust solution, we would need a proper GET endpoint or JSONP.
+            // However, since we are storing locally for immediate use, we will stick to local + push sync for now
+            // to keep it simple and functional without complex backend setup.
+            // 
+            // *Correction*: To truly sync *down*, we need the Apps Script to return JSON and handle CORS or use a proxy.
+            // Given the constraints, we will focus on *pushing* data to the sheet for backup.
+        }
+
+        function renderPlaces(container) {
+            // Group spots by location
+            const groupedPlaces = myPlaces.reduce((acc, place) => {
+                const loc = place.location || 'Other';
+                if (!acc[loc]) acc[loc] = [];
+                acc[loc].push(place);
+                return acc;
+            }, {});
+
+            // Generate options for select
+            const locationOptions = locations.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
+
+            // Generate list HTML grouped by location
+            let listHtml = '';
+            if (myPlaces.length === 0) {
+                listHtml = '<p class="text-center text-gray-400 py-8">還沒有私房景點，快去新增吧！</p>';
+            } else {
+                locations.forEach(locObj => {
+                    const placesInLoc = groupedPlaces[locObj.id];
+                    if (placesInLoc && placesInLoc.length > 0) {
+                        listHtml += `
+                            <div class="mb-6">
+                                <h3 class="font-bold text-lg text-gray-700 mb-2 border-b border-gray-200 pb-1 cursor-pointer flex justify-between items-center" onclick="toggleGroup('${locObj.id}')">
+                                    ${locObj.name}
+                                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform" id="icon-${locObj.id}"></i>
+                                </h3>
+                                <div id="group-${locObj.id}" class="space-y-3 transition-all duration-300 overflow-hidden">
+                                    ${placesInLoc.slice().reverse().map(place => {
+                                        const originalIndex = myPlaces.indexOf(place);
+                                        return `
+                                        <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-2">
+                                            <div class="flex justify-between items-start">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-xl">${getCategoryIcon(place.category)}</span>
+                                                    <div>
+                                                        <h4 class="font-bold text-gray-800">${place.name}</h4>
+                                                        ${place.note ? `<p class="text-xs text-gray-500">${place.note}</p>` : ''}
+                                                    </div>
+                                                </div>
+                                                <button onclick="deletePlace(${originalIndex})" class="text-gray-300 hover:text-red-500">
+                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                            <a href="${place.link}" target="_blank" class="bg-blue-50 text-blue-600 text-center py-2 rounded-lg text-sm font-semibold hover:bg-blue-100 flex items-center justify-center gap-1">
+                                                <i data-lucide="navigation" class="w-3 h-3"></i> 導航去
+                                            </a>
+                                        </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+            
+            const hasWebAppUrl = googleWebAppUrl && googleWebAppUrl.trim() !== '';
+
+            container.innerHTML = `
+                <div class="px-2 fade-in">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i data-lucide="map" class="w-5 h-5 mr-2 text-blue-600"></i> 我的私房景點
+                    </h2>
+                    
+                    ${hasWebAppUrl ? 
+                        `<div class="text-xs text-green-600 mb-4 flex items-center"><i data-lucide="cloud" class="w-3 h-3 mr-1"></i> 新增時會自動備份到 Google 表格</div>` : 
+                        `<div class="text-xs text-orange-500 mb-4">⚠️ 尚未連結 Google 表格 (僅存於手機)</div>`
+                    }
+
+                    <!-- 新增表單 -->
+                    <div class="bg-white p-4 rounded-xl scrapbook-card mb-6">
+                        <h3 class="font-bold text-gray-700 mb-3">新增景點</h3>
+                        <div class="space-y-3">
+                            <input type="text" id="place-name" placeholder="店名 / 景點名稱 (例如: Venchi)" class="w-full border border-gray-300 rounded p-2 text-sm">
+                            
+                            <div class="flex gap-2">
+                                <select id="place-location" class="w-1/2 border border-gray-300 rounded p-2 text-sm bg-white">
+                                    ${locationOptions}
+                                </select>
+                                <select id="place-category" class="w-1/2 border border-gray-300 rounded p-2 text-sm bg-white">
+                                    <option value="gelato">🍦 冰淇淋</option>
+                                    <option value="coffee">☕ 咖啡</option>
+                                    <option value="food">🍝 美食</option>
+                                    <option value="shopping">🛍️ 購物</option>
+                                    <option value="spot">📷 景點</option>
+                                    <option value="other">📍 其他</option>
+                                </select>
+                            </div>
+
+                            <input type="text" id="place-link" placeholder="Google Maps 網址 (貼上連結)" class="w-full border border-gray-300 rounded p-2 text-sm">
+                            
+                            <input type="text" id="place-note" placeholder="備註 (例如: 必點開心果口味)" class="w-full border border-gray-300 rounded p-2 text-sm">
+
+                            <button id="add-place-btn" onclick="addPlace()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold text-sm">加入清單</button>
+                        </div>
+                    </div>
+
+                    <!-- 清單列表 -->
+                    <div id="places-list">
+                        ${listHtml}
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function toggleGroup(id) {
+            const group = document.getElementById(`group-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            if (group.style.display === 'none') {
+                group.style.display = 'block';
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                group.style.display = 'none';
+                icon.style.transform = 'rotate(-90deg)';
+            }
+        }
+
+        function getCategoryIcon(cat) {
+            const map = {
+                'gelato': '🍦', 'coffee': '☕', 'food': '🍝', 
+                'shopping': '🛍️', 'spot': '📷', 'other': '📍'
+            };
+            return map[cat] || '📍';
+        }
+
+        function addPlace() {
+            const name = document.getElementById('place-name').value.trim();
+            const location = document.getElementById('place-location').value;
+            const category = document.getElementById('place-category').value;
+            const link = document.getElementById('place-link').value.trim();
+            const note = document.getElementById('place-note').value.trim();
+            const btn = document.getElementById('add-place-btn');
+
+            if (name && link) {
+                const newPlace = { name, location, category, link, note };
+                myPlaces.push(newPlace);
+                localStorage.setItem('italy_my_places', JSON.stringify(myPlaces));
+                
+                // Sync to Google Sheet if configured
+                if (googleWebAppUrl) {
+                    btn.disabled = true;
+                    btn.innerText = '同步中...';
+                    
+                    const payload = {
+                        type: 'place',
+                        name: newPlace.name,
+                        location: newPlace.location,
+                        category: newPlace.category,
+                        link: newPlace.link,
+                        note: newPlace.note
+                    };
+
+                    fetch(googleWebAppUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(() => {
+                        // Success handling (blindly assume success with no-cors)
+                    })
+                    .catch(err => console.error(err))
+                    .finally(() => {
+                        renderPlaces(document.getElementById('main-content'));
+                    });
+                } else {
+                    renderPlaces(document.getElementById('main-content'));
+                }
+            } else {
+                alert('請至少輸入名稱和網址喔！');
+            }
+        }
+
+        function deletePlace(index) {
+            if(confirm('確定要刪除這個景點嗎？(僅刪除手機端紀錄)')) {
+                myPlaces.splice(index, 1);
+                localStorage.setItem('italy_my_places', JSON.stringify(myPlaces));
+                renderPlaces(document.getElementById('main-content'));
+            }
+        }
+
+        // --- EXISTING HELPER FUNCTIONS ---
         function createItineraryCard(item) {
              const detailCards = item.details.map(detail => `
                 <div class="${detail.color} p-3 rounded-xl flex items-start text-sm border border-gray-300">
@@ -523,7 +765,10 @@
             if (item.weather) {
                 weatherHtml = `
                     <div class="bg-[#e0f2f1] text-teal-800 p-3 rounded-xl mb-4 flex justify-between items-center shadow-inner border border-teal-300 relative z-10">
-                        <div class="font-bold text-lg">${item.weather.icon} ${item.weather.temp}</div>
+                        <div class="flex flex-col">
+                            <div class="font-bold text-xl">${item.weather.icon} ${item.weather.temp}</div>
+                            <div class="text-xs text-gray-500 mt-1">目前: ${item.weather.currentTemp}</div>
+                        </div>
                         <div class="text-right text-sm">
                             <p class="font-semibold text-xs text-teal-600 uppercase">${item.locationName}</p>
                             <p class="font-bold">${item.weather.condition}</p>
@@ -538,7 +783,8 @@
                 `;
             }
 
-            // 移除 story 區塊
+            const mainTitle = item.main ? `<div class="text-center mb-4"><h2 class="text-lg font-bold text-gray-800 border-b-2 border-red-200 inline-block pb-1">${item.main}</h2></div>` : '';
+
             return `
                 <div class="scrapbook-card bg-white p-5 rounded-3xl border-2 border-[#5a5a5a] relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -mr-8 -mt-8 z-0 opacity-50"></div>
@@ -549,6 +795,7 @@
                     </div>
                     
                     ${weatherHtml}
+                    ${mainTitle}
 
                     <div class="space-y-3 mb-4 relative z-10">${detailCards}</div>
                     ${highlightsSection}
@@ -713,7 +960,8 @@
                 case 'flight': return 'plane';
                 case 'traffic': return 'bus';
                 case 'meal': return 'utensils';
-                case 'info': return 'info'; // 新增 info icon
+                case 'f1': return 'trophy'; // F1 Icon
+                case 'info': return 'info';
                 default: return 'map-pin';
             }
         }
@@ -723,7 +971,7 @@
         function checkAndFetchWeather(index) {
             const item = itineraryData[index];
             const now = new Date().getTime();
-            // 縮短快取時間為 10 分鐘，確保拿到較新的即時數據
+            // 快取 10 分鐘
             if (!item.weather || (item.weatherTimestamp && now - item.weatherTimestamp > 600000)) {
                 fetchWeather(index, item.lat, item.lng);
             }
@@ -758,6 +1006,7 @@
                 console.error("Weather fetch failed:", error);
                 itineraryData[index].weather = {
                     temp: "--",
+                    currentTemp: "--",
                     icon: "⚠️",
                     condition: "暫時無法取得天氣"
                 };
@@ -808,6 +1057,7 @@
                     btn.innerHTML = '<span class="spinner mr-2"></span> 同步中...';
                     
                     const payload = {
+                        type: 'expense', // Type added
                         date: newExpense.date.split('T')[0],
                         item: newExpense.item,
                         currency: newExpense.currency,
