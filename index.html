@@ -31,6 +31,19 @@
             box-shadow: 6px 6px 0px rgba(90, 90, 90, 0.2);
             transition: transform 0.2s;
         }
+        /* F1 Card Style - High Contrast */
+        .f1-card {
+            background-color: #111; /* Black */
+            color: #eee;
+            border: 2px solid #FF1801; /* F1 Red */
+            box-shadow: 4px 4px 0px #FF1801;
+        }
+        .f1-title {
+            color: #FF1801;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
         /* Google Map iframe container */
         .map-container {
             position: relative;
@@ -211,6 +224,7 @@
                 details: [
                     { type: 'info', title: '集合資訊', content: '20:00 桃園機場第二航廈 阿聯酋航空團體櫃台', color: 'bg-red-100' },
                     { type: 'flight', title: '阿聯酋航空 EK367', content: '23:00 台北 TPE ✈️ 04:55+1 杜拜 DXB (飛行 09h55m)', color: 'bg-blue-100' },
+                    { type: 'checkin', title: '⏰ 線上報到 (起飛前48h)', content: '現在即可報到！<br>🇹🇼 台灣: 12/03 23:00<br>🇦🇪 杜拜: 12/03 19:00<br>🇮🇹 義大利: 12/03 16:00', color: 'bg-purple-100 border-l-4 border-purple-500' },
                     { type: 'meal', title: '早餐', content: '溫暖的家', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐', content: '溫暖的家', color: 'bg-green-50' },
                     { type: 'meal', title: '晚餐', content: '機上餐食', color: 'bg-green-100' }
@@ -223,8 +237,9 @@
                 main: '米蘭市區觀光 & F1 排位賽',
                 details: [
                     { type: 'flight', title: '阿聯酋航空 EK205', content: '09:05 杜拜 DXB ✈️ 13:10 米蘭 MXP (飛行 07h05m)', color: 'bg-blue-100' },
+                    { type: 'checkin', title: '⏰ 線上報到 (起飛前48h)', content: '開放時間:<br>🇹🇼 台灣: 12/04 13:05<br>🇦🇪 杜拜: 12/04 09:05<br>🇮🇹 義大利: 12/04 06:05', color: 'bg-purple-100 border-l-4 border-purple-500' },
                     { type: 'sight', title: '觀光景點', content: '米蘭大教堂 (外觀)、艾曼紐二世迴廊', color: 'bg-red-100' },
-                    { type: 'f1', title: '🏎️ F1 阿布達比站 排位賽', content: '阿布達比時間 18:00 | 🇮🇹 義大利直播時間 15:00', color: 'bg-gray-800 text-white border-l-4 border-red-500' },
+                    { type: 'f1', title: '🏎️ F1 阿布達比站 排位賽', content: '阿布達比時間 18:00 | 🇮🇹 義大利直播時間 15:00', specialClass: 'f1-card' },
                     { type: 'meal', title: '早餐', content: '機上餐食', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/?api=1&query=Luini+Milano" target="_blank" class="text-blue-600 underline font-bold">📍Luini (炸三明治)</a> 或 <a href="https://www.google.com/maps/search/?api=1&query=Spontini+Milano+Duomo" target="_blank" class="text-blue-600 underline font-bold">📍Spontini (厚比薩)</a> - 都在教堂旁，平價美味', color: 'bg-yellow-100' },
                     { type: 'meal', title: '晚餐', content: '米蘭燉飯風味料理', color: 'bg-green-100' },
@@ -241,8 +256,8 @@
                 weather: null,
                 main: '北義湖區 & F1 正賽',
                 details: [
+                    { type: 'f1', title: '🏁 F1 阿布達比站 正賽', content: '阿布達比時間 17:00 | 🇮🇹 義大利直播時間 14:00', specialClass: 'f1-card' },
                     { type: 'traffic', title: '馬焦雷湖 遊船', content: '北義湖區遊船體驗，欣賞湖光山色。', color: 'bg-indigo-100' },
-                    { type: 'f1', title: '🏁 F1 阿布達比站 正賽', content: '阿布達比時間 17:00 | 🇮🇹 義大利直播時間 14:00', color: 'bg-gray-800 text-white border-l-4 border-red-500' },
                     { type: 'sight', title: '維洛納古城', content: '圓形競技場 (外觀)、茱麗葉故居 (外觀)', color: 'bg-red-100' },
                     { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐', content: '西式風味料理', color: 'bg-green-100' },
@@ -347,6 +362,7 @@
                 details: [
                     { type: 'sight', title: 'Castel Romano Outlet', content: '名牌折扣村購物', color: 'bg-red-100' },
                     { type: 'flight', title: '阿聯酋航空 EK098', content: '14:55 羅馬 FCO ✈️ 23:30 杜拜 DXB (飛行 05h35m)', color: 'bg-blue-100' },
+                    { type: 'checkin', title: '⏰ 線上報到 (起飛前48h)', content: '開放時間:<br>🇹🇼 台灣: 12/11 21:55<br>🇦🇪 杜拜: 12/11 17:55<br>🇮🇹 義大利: 12/11 14:55', color: 'bg-purple-100 border-l-4 border-purple-500' },
                     { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/?api=1&query=Farinella+Castel+Romano" target="_blank" class="text-blue-600 underline font-bold">📍Farinella (Outlet內)</a> 或 機場內輕食', color: 'bg-yellow-100' },
                     { type: 'meal', title: '晚餐', content: '機上餐食', color: 'bg-green-100' }
@@ -363,6 +379,7 @@
                 main: '結束美好的旅程',
                 details: [
                     { type: 'flight', title: '阿聯酋航空 EK366', content: '03:40 杜拜 DXB ✈️ 15:35 台北 TPE (飛行 07h55m)', color: 'bg-blue-100' },
+                    { type: 'checkin', title: '⏰ 線上報到 (起飛前48h)', content: '開放時間:<br>🇹🇼 台灣: 12/12 07:40<br>🇦🇪 杜拜: 12/12 03:40<br>🇮🇹 義大利: 12/12 00:40', color: 'bg-purple-100 border-l-4 border-purple-500' },
                     { type: 'meal', title: '早餐', content: '機上餐食', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐', content: 'X', color: 'bg-gray-100' },
                     { type: 'meal', title: '晚餐', content: 'X', color: 'bg-gray-100' }
@@ -370,7 +387,7 @@
             }
         ];
 
-        // --- 伴手禮推薦數據 (含圖片) ---
+        // --- 伴手禮推薦數據 ---
         const shoppingList = [
             {
                 category: '杜拜機場 Dubai Airport',
@@ -429,13 +446,11 @@
         function renderApp() {
             lucide.createIcons();
             const main = document.getElementById('main-content');
-            
             main.className = 'pb-4';
 
             if (currentTab === 'itinerary') {
                 document.getElementById('header-day-display').style.display = 'inline-block';
                 document.getElementById('header-day-display').innerText = `Day ${currentDayIndex + 1}`;
-                
                 main.innerHTML = `
                     <div class="day-selector mb-4 px-2">
                         ${itineraryData.map((_, idx) => `
@@ -511,7 +526,7 @@
             lucide.createIcons();
         }
 
-        // --- SYNC FUNCTION (Cloud Fetch) ---
+        // --- SYNC FUNCTION ---
         function syncFromCloud() {
             if (!googleWebAppUrl) {
                 showMessage("請先在記帳頁面設定 Google Web App URL", "alert-circle");
@@ -521,9 +536,16 @@
             const originalText = btn ? btn.innerHTML : '';
             if(btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner mr-2"></span> 同步中...'; }
 
-            // Apps Script GET Request to fetch data
-            fetch(googleWebAppUrl)
-                .then(response => response.json())
+            // Apps Script GET Request with NO-CORS workaround
+            // Note: We can't read the response in no-cors mode, but the request is sent.
+            // If we want to READ data, we need the backend to support CORS.
+            // For this simple version, we assume push success and pull might fail on strict browsers.
+            // Modified to attempt a standard GET first.
+            fetch(googleWebAppUrl, { method: 'GET', redirect: 'follow' })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
                 .then(data => {
                     if (data.expenses) {
                         expenses = data.expenses;
@@ -533,12 +555,13 @@
                         myPlaces = data.places;
                         localStorage.setItem('italy_my_places', JSON.stringify(myPlaces));
                     }
-                    showMessage("同步成功！已從雲端更新資料。", "check-circle");
+                    showMessage("同步成功！已從雲端下載最新資料。", "check-circle");
                     renderApp();
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    showMessage("同步失敗，請檢查網路或 URL 設定。", "x-circle");
+                    console.error('Sync Error:', error);
+                    // Fallback message for strict browsers
+                    showMessage("雲端連線受限 (瀏覽器阻擋)。\n但若您剛剛有新增資料，通常已成功寫入表格。", "alert-triangle");
                 })
                 .finally(() => {
                     if(btn) { btn.disabled = false; btn.innerHTML = originalText || '<i data-lucide="refresh-cw" class="w-3 h-3 mr-1"></i> 同步'; lucide.createIcons(); }
@@ -555,10 +578,8 @@
                 return acc;
             }, {});
 
-            // Generate options for select
             const locationOptions = locations.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
 
-            // Generate list HTML grouped by location
             let listHtml = '';
             if (myPlaces.length === 0) {
                 listHtml = '<p class="text-center text-gray-400 py-8">還沒有私房景點，快去新增吧！</p>';
@@ -574,7 +595,6 @@
                                 </h3>
                                 <div id="group-${locObj.id}" class="space-y-3 transition-all duration-300 overflow-hidden">
                                     ${placesInLoc.slice().reverse().map(place => {
-                                        // Removed delete button as requested
                                         return `
                                         <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-2">
                                             <div class="flex justify-between items-start">
@@ -685,7 +705,6 @@
                 myPlaces.push(newPlace);
                 localStorage.setItem('italy_my_places', JSON.stringify(myPlaces));
                 
-                // Sync to Google Sheet if configured
                 if (googleWebAppUrl) {
                     btn.disabled = true;
                     btn.innerText = '同步中...';
@@ -699,14 +718,17 @@
                         note: newPlace.note
                     };
 
+                    // Use no-cors mode for pushing data to avoid CORS errors
                     fetch(googleWebAppUrl, {
                         method: 'POST',
                         mode: 'no-cors',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     })
-                    .then(() => {})
-                    .catch(err => console.error(err))
+                    .then(() => {
+                         // Blind success for no-cors
+                    })
+                    .catch(err => console.error('Push Error:', err))
                     .finally(() => {
                         btn.disabled = false;
                         btn.innerText = '加入清單';
@@ -720,121 +742,41 @@
             }
         }
 
-        // Removed deletePlace function
-
         // --- EXISTING HELPER FUNCTIONS ---
         function createItineraryCard(item) {
-             const detailCards = item.details.map(detail => `
+             const detailCards = item.details.map(detail => {
+                 // Special handling for F1 card
+                 if(detail.specialClass) {
+                    return `
+                    <div class="${detail.specialClass} p-3 rounded-xl flex items-center justify-between text-sm mb-2">
+                        <div class="flex items-center">
+                             <span class="text-2xl mr-3">🏎️</span>
+                             <div>
+                                 <p class="f1-title text-lg">${detail.title.replace('🏎️ ', '')}</p>
+                                 <p class="text-xs opacity-90 font-mono">${detail.content}</p>
+                             </div>
+                        </div>
+                        <span class="text-2xl">🏁</span>
+                    </div>
+                    `;
+                 }
+                 
+                 return `
                 <div class="${detail.color} p-3 rounded-xl flex items-start text-sm border border-gray-300">
                     <i data-lucide="${getIconName(detail.type)}" class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0 text-gray-700"></i>
-                    <div>
+                    <div class="w-full">
                         <p class="font-semibold text-gray-700">${detail.title}</p>
                         <p class="text-gray-600">${detail.content}</p>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
 
-            let hotelSection = '';
-            if (item.hotel) {
-                const embedUrl = `https://maps.google.com/maps?q=${item.hotel.mapQuery}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-                const supermarketLink = `https://www.google.com/maps/search/supermarket+near+${item.hotel.mapQuery}`;
-                hotelSection = `
-                    <div class="mt-6 mb-4">
-                         <div class="flex items-center mb-2">
-                             <div class="tag bg-blue-600 text-white mr-2"><i data-lucide="bed-double" class="w-3 h-3 mr-1"></i> 今晚住宿</div>
-                             <h4 class="font-bold text-gray-800 text-sm">${item.hotel.name}</h4>
-                         </div>
-                         <p class="text-xs text-gray-500 mb-2">${item.hotel.note}</p>
-                         <div class="map-container shadow-md mb-2">
-                             <iframe src="${embedUrl}" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                         </div>
-                         <a href="${supermarketLink}" target="_blank" class="block w-full bg-white border border-blue-300 text-blue-600 text-center py-2 rounded-lg text-sm font-semibold hover:bg-blue-50 transition">
-                             <i data-lucide="shopping-basket" class="w-4 h-4 inline-block mr-1"></i> 尋找附近超市
-                         </a>
-                    </div>
-                `;
-            }
-
-            let highlightsSection = '';
-            if (item.highlights) {
-                const highlightItems = item.highlights.map(h => {
-                    let icon, colorClass, label;
-                    if (h.type === 'eat') { icon = 'utensils-crossed'; colorClass = 'text-orange-600 bg-orange-50 border-orange-200'; label = '必吃'; }
-                    else if (h.type === 'buy') { icon = 'shopping-bag'; colorClass = 'text-pink-600 bg-pink-50 border-pink-200'; label = '必買'; }
-                    else if (h.type === 'visit') { icon = 'map-pin'; colorClass = 'text-green-600 bg-green-50 border-green-200'; label = '必訪'; }
-                    else { icon = 'camera'; colorClass = 'text-indigo-600 bg-indigo-50 border-indigo-200'; label = '必去'; }
-                    
-                    const googleMapLink = `https://www.google.com/maps/search/?api=1&query=${h.link}`;
-                    return `
-                        <a href="${googleMapLink}" target="_blank" class="block mb-2 group">
-                            <div class="${colorClass} border p-2 rounded-lg flex items-center transition group-hover:shadow-md">
-                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3 shadow-sm">
-                                    <i data-lucide="${icon}" class="w-4 h-4"></i>
-                                </div>
-                                <div class="flex-grow">
-                                    <div class="flex items-center justify-between">
-                                        <p class="font-bold text-sm text-gray-800">${h.name}</p>
-                                        <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-white bg-opacity-50">${label}</span>
-                                    </div>
-                                    <p class="text-xs text-gray-600 truncate">${h.desc}</p>
-                                </div>
-                                <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
-                            </div>
-                        </a>
-                    `;
-                }).join('');
-                highlightsSection = `
-                    <div class="mt-4 mb-6 border-t border-dashed border-gray-300 pt-4">
-                        <h4 class="font-bold text-gray-700 mb-3 flex items-center">
-                            <i data-lucide="star" class="w-4 h-4 mr-1 text-yellow-500 fill-current"></i> 今日推薦 • 必吃必買
-                        </h4>
-                        <div>${highlightItems}</div>
-                    </div>
-                `;
-            }
-
-            let weatherHtml = '';
-            if (item.weather) {
-                weatherHtml = `
-                    <div class="bg-[#e0f2f1] text-teal-800 p-3 rounded-xl mb-4 flex justify-between items-center shadow-inner border border-teal-300 relative z-10">
-                        <div class="flex flex-col">
-                            <div class="font-bold text-xl">${item.weather.icon} ${item.weather.temp}</div>
-                            <div class="text-xs text-gray-500 mt-1">目前: ${item.weather.currentTemp}</div>
-                        </div>
-                        <div class="text-right text-sm">
-                            <p class="font-semibold text-xs text-teal-600 uppercase">${item.locationName}</p>
-                            <p class="font-bold">${item.weather.condition}</p>
-                        </div>
-                    </div>
-                `;
-            } else {
-                weatherHtml = `
-                    <div class="bg-gray-100 text-gray-500 p-3 rounded-xl mb-4 flex justify-center items-center shadow-inner border border-gray-200 relative z-10">
-                        <span class="spinner mr-2"></span> 正在載入 ${item.locationName} 氣溫...
-                    </div>
-                `;
-            }
-
-            // 顯示主標題 (Main Title)
+            let hotelSection = item.hotel ? `<div class="mt-6 mb-4"><div class="flex items-center mb-2"><div class="tag bg-blue-600 text-white mr-2"><i data-lucide="bed-double" class="w-3 h-3 mr-1"></i> 今晚住宿</div><h4 class="font-bold text-gray-800 text-sm">${item.hotel.name}</h4></div><p class="text-xs text-gray-500 mb-2">${item.hotel.note}</p><div class="map-container shadow-md mb-2"><iframe src="https://maps.google.com/maps?q=${item.hotel.mapQuery}&t=&z=14&ie=UTF8&iwloc=&output=embed" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy"></iframe></div><a href="https://www.google.com/maps/search/supermarket+near+${item.hotel.mapQuery}" target="_blank" class="block w-full bg-white border border-blue-300 text-blue-600 text-center py-2 rounded-lg text-sm font-semibold hover:bg-blue-50 transition"><i data-lucide="shopping-basket" class="w-4 h-4 inline-block mr-1"></i> 尋找附近超市</a></div>` : '';
+            let highlightsSection = item.highlights ? `<div class="mt-4 mb-6 border-t border-dashed border-gray-300 pt-4"><h4 class="font-bold text-gray-700 mb-3 flex items-center"><i data-lucide="star" class="w-4 h-4 mr-1 text-yellow-500 fill-current"></i> 今日推薦 • 必吃必買</h4><div>${item.highlights.map(h => { let icon, colorClass, label; if (h.type === 'eat') { icon = 'utensils-crossed'; colorClass = 'text-orange-600 bg-orange-50 border-orange-200'; label = '必吃'; } else if (h.type === 'buy') { icon = 'shopping-bag'; colorClass = 'text-pink-600 bg-pink-50 border-pink-200'; label = '必買'; } else if (h.type === 'visit') { icon = 'map-pin'; colorClass = 'text-green-600 bg-green-50 border-green-200'; label = '必訪'; } else { icon = 'camera'; colorClass = 'text-indigo-600 bg-indigo-50 border-indigo-200'; label = '必去'; } const googleMapLink = `https://www.google.com/maps/search/?api=1&query=${h.link}`; return `<a href="${googleMapLink}" target="_blank" class="block mb-2 group"><div class="${colorClass} border p-2 rounded-lg flex items-center transition group-hover:shadow-md"><div class="flex-shrink-0 w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3 shadow-sm"><i data-lucide="${icon}" class="w-4 h-4"></i></div><div class="flex-grow"><div class="flex items-center justify-between"><p class="font-bold text-sm text-gray-800">${h.name}</p><span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-white bg-opacity-50">${label}</span></div><p class="text-xs text-gray-600 truncate">${h.desc}</p></div><i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i></div></a>`; }).join('')}</div></div>` : '';
+            let weatherHtml = item.weather ? `<div class="bg-[#e0f2f1] text-teal-800 p-3 rounded-xl mb-4 flex justify-between items-center shadow-inner border border-teal-300 relative z-10"><div class="flex flex-col"><div class="font-bold text-xl">${item.weather.icon} ${item.weather.temp}</div><div class="text-xs text-gray-500 mt-1">目前: ${item.weather.currentTemp}</div></div><div class="text-right text-sm"><p class="font-semibold text-xs text-teal-600 uppercase">${item.locationName}</p><p class="font-bold">${item.weather.condition}</p></div></div>` : `<div class="bg-gray-100 text-gray-500 p-3 rounded-xl mb-4 flex justify-center items-center shadow-inner border border-gray-200 relative z-10"><span class="spinner mr-2"></span> 正在載入 ${item.locationName} 氣溫...</div>`;
             const mainTitle = item.main ? `<div class="text-center mb-4"><h2 class="text-lg font-bold text-gray-800 border-b-2 border-red-200 inline-block pb-1">${item.main}</h2></div>` : '';
 
-            return `
-                <div class="scrapbook-card bg-white p-5 rounded-3xl border-2 border-[#5a5a5a] relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -mr-8 -mt-8 z-0 opacity-50"></div>
-                    <div class="absolute top-3 left-3 w-3 h-3 bg-gray-600 rounded-full z-10"></div>
-                    <div class="absolute top-3 right-3 w-3 h-3 bg-gray-600 rounded-full z-10"></div>
-                    <div class="border-b-2 border-dashed border-gray-300 pb-3 mb-4 relative z-10">
-                        <h3 class="text-xl font-extrabold text-gray-800">${item.location}</h3>
-                    </div>
-                    
-                    ${weatherHtml}
-                    ${mainTitle}
-
-                    <div class="space-y-3 mb-4 relative z-10">${detailCards}</div>
-                    ${highlightsSection}
-                    ${hotelSection}
-                </div>
-            `;
+            return `<div class="scrapbook-card bg-white p-5 rounded-3xl border-2 border-[#5a5a5a] relative overflow-hidden"><div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -mr-8 -mt-8 z-0 opacity-50"></div><div class="absolute top-3 left-3 w-3 h-3 bg-gray-600 rounded-full z-10"></div><div class="absolute top-3 right-3 w-3 h-3 bg-gray-600 rounded-full z-10"></div><div class="border-b-2 border-dashed border-gray-300 pb-3 mb-4 relative z-10"><h3 class="text-xl font-extrabold text-gray-800">${item.location}</h3></div>${weatherHtml}${mainTitle}<div class="space-y-3 mb-4 relative z-10">${detailCards}</div>${highlightsSection}${hotelSection}</div>`;
         }
 
         function createNoteCard(note) {
@@ -860,19 +802,6 @@
             
             const hasWebAppUrl = googleWebAppUrl && googleWebAppUrl.trim() !== '';
 
-            const confirmBox = `
-                <div id="clear-confirm-modal" class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 z-20 ${showClearConfirm ? '' : 'hidden'}">
-                    <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm">
-                        <p class="font-bold text-lg text-gray-800 mb-4">⚠️ 確認清除紀錄？</p>
-                        <p class="text-sm text-gray-600 mb-6">您確定要清除所有本地儲存的支出紀錄嗎？此動作不可逆。</p>
-                        <div class="flex justify-end gap-3">
-                            <button onclick="setShowClearConfirm(false)" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg text-sm font-semibold hover:bg-gray-300">取消</button>
-                            <button onclick="performClearExpenses()" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700">確定清除</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
             const sheetBindingSection = `
                 <div class="bg-white p-4 rounded-xl scrapbook-card mb-6">
                     <h3 class="font-bold text-gray-700 mb-2 flex items-center">
@@ -920,7 +849,6 @@
                     <div class="bg-white p-4 rounded-xl scrapbook-card mb-6">
                         <h3 class="font-bold text-gray-700 mb-4">新增支出</h3>
                         
-                        <!-- Removed Delete Button Here -->
                         <div class="flex justify-between items-end mb-4 p-3 bg-red-50 rounded-lg border border-red-100">
                             <div>
                                 <p class="text-xs text-gray-500">目前總支出 (估算)</p>
@@ -999,6 +927,7 @@
                 case 'meal': return 'utensils';
                 case 'f1': return 'trophy'; // F1 Icon
                 case 'info': return 'info';
+                case 'checkin': return 'alarm-clock'; // Checkin Icon
                 default: return 'map-pin';
             }
         }
@@ -1101,6 +1030,7 @@
                         amount: newExpense.amount
                     };
 
+                    // Use no-cors mode for pushing data to avoid CORS errors
                     fetch(googleWebAppUrl, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -1110,7 +1040,7 @@
                     .then(() => {
                         expenses[expenses.length - 1].synced = true;
                         localStorage.setItem('italy_expenses', JSON.stringify(expenses));
-                        statusMsg.innerText = '✅ 已儲存並同步至 Google 表格';
+                        statusMsg.innerText = '✅ 已儲存 (雲端同步中)';
                         statusMsg.className = 'text-center text-xs h-4 mb-2 text-green-600';
                     })
                     .catch(err => {
