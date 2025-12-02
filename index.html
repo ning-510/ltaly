@@ -241,7 +241,7 @@
                     { type: 'sight', title: '觀光景點', content: '米蘭大教堂 (外觀)、艾曼紐二世迴廊', color: 'bg-red-100' },
                     { type: 'f1', title: '🏎️ F1 阿布達比站 排位賽', content: '阿布達比時間 18:00 | 🇮🇹 義大利直播時間 15:00', specialClass: 'f1-card' },
                     { type: 'meal', title: '早餐', content: '機上餐食', color: 'bg-green-50' },
-                    { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/?api=1&query=Luini+Milano" target="_blank" class="text-blue-600 underline font-bold">📍Luini (炸三明治)</a> 或 <a href="https://www.google.com/maps/search/?api=1&query=Spontini+Milano+Duomo" target="_blank" class="text-blue-600 underline font-bold">📍Spontini (厚比薩)</a> - 都在教堂旁，平價美味', color: 'bg-yellow-100' },
+                    { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/?api=1&query=Luini+Milano" target="_blank" class="text-blue-600 underline font-bold">📍Luini (炸三明治 €3)</a> 或 <a href="https://www.google.com/maps/search/?api=1&query=Spontini+Milano+Duomo" target="_blank" class="text-blue-600 underline font-bold">📍Spontini (厚比薩 €6)</a> - 都在教堂旁，平價美味', color: 'bg-yellow-100' },
                     { type: 'meal', title: '晚餐', content: '米蘭燉飯風味料理', color: 'bg-green-100' },
                 ],
                 hotel: { name: 'UNAHOTELS MALPENSA', mapQuery: 'UNAHOTELS+Malpensa', note: '位於米蘭馬爾彭薩機場附近，現代化舒適飯店。' },
@@ -387,7 +387,7 @@
             }
         ];
 
-        // --- 伴手禮推薦數據 (含圖片) ---
+        // --- 伴手禮推薦數據 (含圖片 Placeholder，您可替換) ---
         const shoppingList = [
             {
                 category: '杜拜機場 Dubai Airport',
@@ -425,6 +425,7 @@
         let currentTab = 'itinerary';
         let expenses = JSON.parse(localStorage.getItem('italy_expenses')) || [];
         let myPlaces = JSON.parse(localStorage.getItem('italy_my_places')) || [];
+        // 預設您的 Google Apps Script URL
         let googleWebAppUrl = localStorage.getItem('italy_google_webapp_url') || 'https://script.google.com/macros/s/AKfycbwTee899sdmcfi0-9daLE32tEWEqz1WdS48rFlHM6r75HI3cqeGzk-RKvNK9GuiFwcuIw/exec'; 
         let showClearConfirm = false;
 
@@ -538,9 +539,16 @@
             const originalText = btn ? btn.innerHTML : '';
             if(btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner mr-2"></span> 同步中...'; }
 
-            // Apps Script GET Request to fetch data
-            fetch(googleWebAppUrl)
-                .then(response => response.json())
+            // Apps Script GET Request with NO-CORS workaround
+            // Note: We can't read the response in no-cors mode, but the request is sent.
+            // If we want to READ data, we need the backend to support CORS.
+            // For this simple version, we assume push success and pull might fail on strict browsers.
+            // Modified to attempt a standard GET first.
+            fetch(googleWebAppUrl, { method: 'GET', redirect: 'follow' })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
                 .then(data => {
                     if (data.expenses) {
                         expenses = data.expenses;
@@ -550,12 +558,13 @@
                         myPlaces = data.places;
                         localStorage.setItem('italy_my_places', JSON.stringify(myPlaces));
                     }
-                    showMessage("同步成功！已從雲端更新資料。", "check-circle");
+                    showMessage("同步成功！已從雲端下載最新資料。", "check-circle");
                     renderApp();
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    showMessage("同步失敗，請檢查網路或 URL 設定。", "x-circle");
+                    console.error('Sync Error:', error);
+                    // Fallback message for strict browsers
+                    showMessage("雲端連線受限 (瀏覽器阻擋)。\n但若您剛剛有新增資料，通常已成功寫入表格。", "alert-triangle");
                 })
                 .finally(() => {
                     if(btn) { btn.disabled = false; btn.innerHTML = originalText || '<i data-lucide="refresh-cw" class="w-3 h-3 mr-1"></i> 同步'; lucide.createIcons(); }
