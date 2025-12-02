@@ -262,7 +262,7 @@
                     { type: 'sight', title: '威尼斯本島', content: '巷弄散策、貢多拉體驗 (5人一艘)', color: 'bg-red-100' },
                     { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
                     { type: 'meal', title: '午餐', content: '威尼斯墨魚麵佐炸海鮮+提拉米蘇', color: 'bg-green-100' },
-                    { type: 'meal', title: '晚餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/?api=1&query=Dal+Moro\'s+Fresh+Pasta+to+Go" target="_blank" class="text-blue-600 underline font-bold">📍Dal Moro\'s (外帶義大麵)</a> 或 <a href="https://www.google.com/maps/search/?api=1&query=Fried+Land+Venice" target="_blank" class="text-blue-600 underline font-bold">📍Fried Land (炸海鮮)</a> - 聖馬可區高CP值', color: 'bg-yellow-100' }
+                    { type: 'meal', title: '晚餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/?api=1&query=Dal+Moro\'s+Fresh+Pasta+to+Go" target="_blank" class="text-blue-600 underline font-bold">📍Dal Moro\'s (外帶義大麵 €8)</a> 或 <a href="https://www.google.com/maps/search/?api=1&query=Fried+Land+Venice" target="_blank" class="text-blue-600 underline font-bold">📍Fried Land (炸海鮮 €10)</a>', color: 'bg-yellow-100' }
                 ],
                 hotel: { name: 'CROWNE PLAZA PADOVA', mapQuery: 'Crowne+Plaza+Padova', note: '位於帕多瓦(Padova)，距離威尼斯約40分鐘車程。' },
                 highlights: [
@@ -296,7 +296,7 @@
                     { type: 'traffic', title: '五漁村火車', content: '搭乘火車遊覽其中兩個漁村', color: 'bg-indigo-100' },
                     { type: 'sight', title: '比薩斜塔', content: '奇蹟廣場、比薩大教堂', color: 'bg-red-100' },
                     { type: 'meal', title: '早餐', content: '飯店內早餐', color: 'bg-green-50' },
-                    { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/?api=1&query=Il+Pescato+Cucinato+Riomaggiore" target="_blank" class="text-blue-600 underline font-bold">📍Il Pescato Cucinato (炸海鮮筒)</a> - Riomaggiore 村著名街頭小吃', color: 'bg-yellow-100' },
+                    { type: 'meal', title: '午餐 (自理推薦)', content: '<a href="https://www.google.com/maps/search/?api=1&query=Il+Pescato+Cucinato+Riomaggiore" target="_blank" class="text-blue-600 underline font-bold">📍Il Pescato Cucinato (炸海鮮筒 €10)</a> - Riomaggiore 村著名街頭小吃', color: 'bg-yellow-100' },
                     { type: 'meal', title: '晚餐', content: '中式料理六菜一湯', color: 'bg-green-100' }
                 ],
                 hotel: { name: 'AC HOTEL PISA', mapQuery: 'AC+Hotel+Pisa', note: '位於比薩近郊，現代設計風格。' },
@@ -927,6 +927,7 @@
                                 <p class="text-2xl font-bold text-red-600">€ ${totalEUR.toFixed(2)}</p>
                                 <p class="text-[10px] text-gray-400 text-right">(AED 以 0.25 估算)</p>
                             </div>
+                            <button onclick="clearExpenses()" class="text-xs text-red-400 underline hover:text-red-600">清除所有</button>
                         </div>
                         
                         <div class="flex gap-2 mb-2">
